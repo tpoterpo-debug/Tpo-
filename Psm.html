@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق دردشة وصانع بوتات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle, #1a1a1a, #2e2e2e);
+    margin: 0;
+    padding: 0;
+    color: #e0e0e0;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    padding: 1rem;
+    width: 530px;
+    max-width: 1500px;
+    margin: 0 auto;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 300px;
+    background: #3c3c3c;
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 20px 0 0 20px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.chat-container {
+    flex: 1;
+    background: rgba(40, 40, 40, 0.95);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #555;
+    border-radius: 0 20px 20px 0;
+}
+
+.messages, .commands {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(68, 68, 68, 0.9);
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 2px solid #555; 
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.input-container {
+    display: flex;
+    margin-top: 15px;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    background: #2a2a2a;
+    color: #fff;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.input-container input:focus {
+    border-color: #25D366;
+    background: #3a3a3a;
+    outline: none;
+    box-shadow: 0 0 5px rgba(37, 211, 102, 0.5);
+}
+
+.input-container button {
+    padding: 12px;
+    background: linear-gradient(90deg, #25D366, #1e7e34);
+    color: white;
+    cursor: pointer;
+    margin-left: 8px;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.input-container button:hover {
+    background: linear-gradient(90deg, #1e7e34, #25D366);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.6);
+}
+
+.bot-item {
+    cursor: pointer;
+    margin: 12px 0;
+    padding: 12px;
+    background: #474747;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.bot-item:hover {
+    background: #585858;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+.bot-item img {
+    width: 50px;  
+    height: 50px; 
+    border-radius: 50%; 
+    margin-left: 10px; 
+}
+
+.home-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: white;
+    width:100;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 12px;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.home-button:hover {
+    background: linear-gradient(90deg, #218838, #28a745);
+    transform: translateY(-2px);
+}
+
+.image-upload-container, .bot-name-container {
+    display: none;
+    margin-top: 15px;
+}
+
+.bot-item img[src*="صانع التوكن"], .bot-item img[src*="صانع البوتات"] {
+    width: 60px; 
+    height: 60px;
+    border-radius: 8px;
+}
+
+.bot-message {
+    background: rgba(55, 55, 55, 0.8); /* خلفية مختلفة للبوت */
+    border-radius: 10px; /* حواف دائرية */
+    padding: 10px; /* حشوة داخلية */
+    margin-bottom: 10px; /* مسافة بين الرسائل */
+}
+
+.user-message {
+    background: rgba(40, 1, 69, 0.8); /* لون خلفية المستخدم */
+    border-radius: 10px; /* حواف دائرية */
+    padding: 10px; /* حشوة داخلية */
+    margin-bottom: 10px; /* مسافة بين الرسائل */
+    display: inline-block
+}
+
+.command-message {
+    color: #FF5733; /* اللون المخصص للأوامر مثل /newbot */
+    font-weight: bold; /* يمكن إضافة تنسيق خط لتمييز الأوامر */
+    display: inline-block
+}
+
+.command-frame {
+    background: rgba(40, 1, 69, 0.8); /* لون خلفية المستخدم */
+    border-radius: 10px; /* حواف دائرية */
+    padding: 10px; /* حشوة داخلية */
+    margin-bottom: 10px; /* مسافة بين الرسائل */
+display: inline-block
+}
+
+.stickers-container {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(68, 68, 68, 0.9);
+    border-radius: 10px;
+}
+
+.sticker {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px;
+    background: #555;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.sticker:hover {
+    background: #666;
+}
+
+    </style>
+    <style>
+        .bot-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .verification-icon {
+            color: #4caf50; /* لون علامة التوثيق */
+            font-size: 24px; /* حجم الأيقونة */
+            margin-left: 5px; /* المسافة بين النص والأيقونة */
+        }
+    </style>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+        <style>
+        .bot-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .verification-icon {
+            color: #FFFFFF; /* لون علامة التوثيق */
+            font-size: 24px; /* حجم الأيقونة */
+            margin-left: 5px; /* المسافة بين النص والأيقونة */
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="sidebar" id="botList">
+        <h3>البوتات</h3>
+        <div class="bot-item" onclick="selectBot('صانع التوكن')">
+            صانع التوكن
+            <img src="token_maker.jpg" alt="صانع التوكن" />
+        </div>
+        <div class="bot-item" onclick="selectBot('صانع البوتات')">
+            صانع البوتات
+            <img src="token_maker1.jpg" alt="صانع البوتات" />
+        </div>
+    </div>
+    <div class="chat-container">
+        <h2> <span class="material-icons verification-icon">verified</span>شات وصانع بوتات</h2>
+        <div class="messages" id="messages"></div>
+
+        
+        <div class="input-container">
+        	    <button id="stickerButton" onclick="toggleStickers()">😊</button>
+<input type="text" id="userInput" placeholder="اكتب رسالتك هنا..." />
+    
+            
+            <button onclick="sendMessage()">          <lord-icon
+                src="https://cdn.lordicon.com/kpnkzylb.json"
+                trigger="loop"
+                delay="2000"
+                state="hover-rotation"
+                colors="primary:#ffffff,secondary:#ffffff,tertiary:#ffffff,quaternary:#ffffff,quinary:#ffffff"
+                style="width:30;height:30">
+            </lord-icon>إرسال</button>
+        </div>
+        <div class="bot-name-container" id="botNameContainer">
+            <input type="text" id="botNameInput" placeholder="اسم البوت (يجب أن ينتهي بـ 'bot' أو 'BOT')" />
+            <button onclick="checkBotName()">التالي</button>
+        </div>
+
+        <div class="image-upload-container" id="imageUploadContainer">
+            <input type="file" id="imageInput" accept="image/*" onchange="previewImage()" />
+            <button onclick="confirmImage()">تأكيد الصورة</button>
+            <img id="imagePreview" style="width: 100px; height: auto; display: none;" />
+        </div>
+<div class="input-container">
+
+</div>
+    <div id="stickersMenu" class="stickers-menu" style="display: none;">
+    <div class="sticker" onclick="sendSticker('🛡️')">🛡️</div>
+    <div class="sticker" onclick="sendSticker('😃')">😃</div>
+    <div class="sticker" onclick="sendSticker('❤️')">❤️</div>
+    <div class="sticker" onclick="sendSticker('😑')">😑</div>
+     <div class="sticker" onclick="sendSticker('⭐')">⭐</div>
+            <div class="sticker" onclick="sendSticker('✅')">✅</div>
+            <div class="sticker" onclick="sendSticker('🌹')">🌹</div>
+                <div class="sticker" onclick="sendSticker('👽')">👽</div>
+                    <div class="sticker" onclick="sendSticker('🤨')">🤨</div>
+                        <div class="sticker" onclick="sendSticker('😎')">😎</div>
+                            <div class="sticker" onclick="sendSticker('🔥')">🔥</div>
+                                <div class="sticker" onclick="sendSticker('🧊')">🧊</div>
+                                    <div class="sticker" onclick="sendSticker('☄️')">☄️</div>
+                                        <div class="sticker" onclick="sendSticker('🕸️')">🕸️</div>
+                                             <div class="sticker" onclick="sendSticker('❄️')">❄️</div>
+                                                 <div class="sticker" onclick="sendSticker('🚫')">🚫</div>
+                                                     <div class="sticker" onclick="sendSticker('💬')">💬</div>
+                                                        <div class="sticker" onclick="sendSticker('😂')">😂</div>
+                                                          <div class="sticker" onclick="sendSticker('☠️')">☠️</div>
+                                                           <div class="sticker" onclick="sendSticker('🤡')">🤡</div>
+                                                           <div class="sticker" onclick="sendSticker('👍')">👍</div>
+                                                               <div class="sticker" onclick="sendSticker('😴')">😴</div>
+                                                                   <div class="sticker" onclick="sendSticker('😁')">😁</div>
+                                                                       <div class="sticker" onclick="sendSticker('🥶')">🥶</div>
+                                                                           <div class="sticker" onclick="sendSticker('😛')">😛</div>
+                                                                               <div class="sticker" onclick="sendSticker('🤑')">🤑</div>
+    <!-- أضف المزيد من الملصقات هنا -->
+</div>
+        
+        <div class="home-button" onclick="goHome()">الصفحة الرئيسية</div>
+    </div>
+</div>
+
+<script>
+    let activeBot = null;
+    const messagesHistory = {};
+    const commandsHistory = {};
+    const commandColor = '#FF5733';
+    
+    const botImages = {};
+    const botNames = {};
+    const botTokens = {};
+    const botColors = {
+        'صانع التوكن': '#3498db', // لون خاص لصانع التوكن
+        'صانع البوتات': '#e67e22', // لون خاص لصانع البوتات
+        'الصفحة الرئيسية': '#2ecc71' // لون خاص للصفحة الرئيسية
+    };
+    
+    function saveBotToLocalStorage(botName, image, token) {
+    const bots = JSON.parse(localStorage.getItem('bots')) || {};
+    bots[botName] = { image, token };
+    localStorage.setItem('bots', JSON.stringify(bots));
+}
+
+function sendAutomaticMessages() {
+    const messages = [
+        "1_ عدم السب",
+        "2_ عدم سرقة التصميم أو نسب التصميم لنفسه",
+        "3_ يجب مراعاة صنع البوتات واستخدام البوتات بطريقة أخلاقية ونحن لسنا مسؤولين عن ما يحدث"
+    ];
+
+    messages.forEach(message => {
+        appendMessage(message, 'bot-message', '#e67e22'); // استخدام لون صانع البوتات
+    });
+}
+
+
+
+function initiateSearchProcess(query) {
+    const searchMessages = [
+        `جاري البحث عن: ${query}...`,
+        `أبحث عن المعلومات ذات الصلة...`,
+        `تحليل البيانات...`,
+        `أحضر النتائج الآن...`
+    ];
+
+    let index = 0;
+
+    const interval = setInterval(() => {
+        if (index < searchMessages.length) {
+            appendMessage(searchMessages[index], 'bot-message', '#e67e22');
+            index++;
+        } else {
+            clearInterval(interval);
+            openSearch(query); // فتح البحث بعد عرض جميع الرسائل
+        }
+    }, 1500); // عرض الرسائل كل 1.5 ثانية
+}
+
+function startAutomaticMessaging() {
+    setInterval(() => {
+        if (!activeBot) { // تحقق مما إذا كانت الصفحة الرئيسية مفتوحة
+            sendAutomaticMessages();
+        }
+    },700); // إر ثواني
+
+}
+const badWords = ["شتيمة1", "شتيمة2", "كسمك", "متهان" ]; // استبدل بالكلمات المناسبة
+
+function containsBadWords(message) {
+    return badWords.some(badWord => message.includes(badWord));
+}
+
+
+
+function handleMessage(userInput, userId) {
+    // سجّل الرسالة المستلمة
+    console.log("Received message:", userInput);
+
+    // تحقق من الكلمات السيئة
+    if (containsBadWords(userInput)) {
+ 
+        appendMessage(`تم حذف رسالتك "${userInput}" بسبب انتهاكها لحقوق الملكية`, 'user-message', '#FF5733'); 
+        
+        muteUser(userId);
+        return; 
+    }
+
+    // إذا كانت الرسالة ليست أمرًا
+    
+    else {
+        // إضافة الرسالة الخاصة بالمستخدم
+        // Check if the input is a command and store it
+        if (userInput.startsWith('/')) {
+            if (!commandsHistory[activeBot]) {
+                commandsHistory[activeBot] = []; // تعريف المصفوفة إذا لم تكن موجودة
+            }
+            commandsHistory[activeBot].push(userInput);
+        } 
+        
+        // Ensure the message is sent only once
+        if (!userInput.startsWith('/')) {
+            
+        } 
+        if (userInput.startsWith('/search ')) {
+            const query = userInput.substring(8); // إزالة `/search `
+            initiateSearchProcess(query); // استدعاء دالة البحث
+            appendMessage(`فتح نتائج البحث عن: ${query}`, 'bot-message', '#e67e22');  
+        } else if (userInput === '/newbot') {
+            document.getElementById('botNameContainer').style.display = 'block';
+        } else if (userInput.startsWith('/deletebot ')) {
+            const botName = userInput.split(' ')[1];
+            deleteBot(botName);
+        }
+        appendMessage(userInput, 'command-message', '#FF5733'); // عرض الأمر المرسل
+    
+    }
+    
+}
+       
+const muteCounts = {};
+
+function muteUser(userId) {
+    // تحديد الوقت بناءً على عدد مرات الشتم
+    const count = muteCounts[userId] || 0;
+    const muteTime = 10+ count * 5; // الوقت يبدأ من 10 ثواني ويزداد 5 ثواني كل مرة
+    muteCounts[userId] = count + 1; // زيادة العداد
+
+    const muteScreen = document.createElement('div');
+    muteScreen.id = 'muteScreen';
+    muteScreen.style.position = 'fixed';
+    muteScreen.style.top = '0';
+    muteScreen.style.left = '0';
+    muteScreen.style.width = '100%';
+    muteScreen.style.height = '100%';
+    muteScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    muteScreen.style.color = 'red';
+    muteScreen.style.fontSize ='48px';
+    muteScreen.style.display = 'flex';
+    muteScreen.style.justifyContent = 'center';
+    muteScreen.style.alignItems = 'center';
+    muteScreen.innerHTML = `أنت مكتوم لمدة ${muteTime} ثانية`;
+    document.body.appendChild(muteScreen);
+
+    let countdown = muteTime;
+    let muteTimer = setInterval(() => {
+        countdown--;
+        muteScreen.innerHTML = `أنت مكتوم لمدة ${countdown} ثانية`;
+
+        if (countdown <= 0) {
+            clearInterval(muteTimer);
+            const existingMuteScreen = document.getElementById('muteScreen');
+            if (existingMuteScreen) {
+                document.body.removeChild(existingMuteScreen);
+            } else {
+                console.log("العنصر غير موجود في الـ DOM");
+            }
+            appendMessage("تم رفع الكتم", 'bot-message', '#2ecc71');
+        }
+    }, 1000);
+}
+
+function openSearch(query) {
+    const searchURL = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    window.open(searchURL, '_blank'); // يفتح النتائج في نافذة جديدة
+}
+
+    function selectBot(botName) {
+        activeBot = botName;
+        const messagesContainer = document.getElementById('messages');
+        messagesContainer.innerHTML = '';
+    
+    const welcomeMessage = `${botName} هو الآن مفتوح للمحادثة. اكتب <span style="color: red;">/newbot</span> لإنشاء بوت جديد.`;
+    appendMessage(welcomeMessage, 'bot-message', botColors[botName]);
+    loadCommands();
+    appendMessage(`${botName} هو الآن مفتوح للمحادثة. اكتب /newbot لإنشاء بوت جديد.`, 'bot-message', botColors[botName]);
+        loadCommands();
+}
+        function sendSticker(sticker) {
+    const userInput = document.getElementById('userInput').value.trim(); // الحصول على النص من المدخل
+    let message = sticker; // بدء الرسالة بالاستيكر
+
+    // إذا كان هناك نص في المدخل، أضفه إلى الرسالة
+    if (userInput) {
+        message = `${userInput} ${sticker}`; // ادمج النص مع الاستيكر
+        document.getElementById('userInput').value = ''; // إعادة تعيين حقل الإدخال
+    } else {
+        document.getElementById('userInput').value = ''; // إعادة تعيين حقل الإدخال
+    }
+
+    appendMessage(message, 'user-message', '#3498db'); // إرسال الرسالة النهائية
+    toggleStickers(); // إغلاق قائمة الملصقات بعد الاختيار
+}
+        
+        function toggleStickers() {
+    const stickersMenu = document.getElementById('stickersMenu');
+    stickersMenu.style.display = stickersMenu.style.display === 'none' ? 'block' : 'none';
+}
+
+
+
+ 
+    function sendMessage() {
+    const userInput = document.getElementById('userInput').value.trim();      
+    const userId = 'someUniqueUserId'; 
+    if (userInput) {
+        handleMessage(userInput, userId);
+
+        // إعادة تعيين حقل الإدخال بعد المعالجة
+        document.getElementById('userInput').value = '';
+    }
+}
+    
+    function checkBotName() {
+        const botName = document.getElementById('botNameInput').value.trim();
+
+        if (!botName.endsWith('bot') && !botName.endsWith('BOT')) {
+            appendMessage(`اسم البوت يجب أن ينتهي بـ 'bot' أو 'BOT'.`, 'bot-message', '#e74c3c');
+            return;
+        }
+
+        botNames[botName] = botName;
+        botColors[botName] = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        messagesHistory[botName] = [];
+        commandsHistory[botName] = [];
+        document.getElementById('botNameContainer').style.display = 'none';
+        document.getElementById('imageUploadContainer').style.display = 'block';
+        appendMessage(`تم قبول اسم البوت: ${botName}. يرجى اختيار صورة.`, 'bot-message', botColors[botName]);
+    }
+
+    function previewImage() {
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        if (imageInput.files && imageInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(imageInput.files[0]);
+        }
+    }
+
+    function generateToken() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let token = '';
+        for (let i = 0; i < 16; i++) {
+            token += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return token;
+    }
+
+    function confirmImage() {
+        const imageInput = document.getElementById('imageInput');
+
+        if (imageInput.files.length === 0) {
+            appendMessage(`يرجى اختيار صورة للبوت.`, 'bot-message', '#e74c3c');
+            return;
+        }
+
+        const botName = Object.keys(botNames)[Object.keys(botNames).length - 1];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            botImages[botName] = event.target.result;
+            const token = generateToken();
+            botTokens[botName] = token;
+            saveBotToLocalStorage(botName, botImages[botName], token);
+            appendMessage(`تم إنشاء البوت: ${botName}`, 'bot-message', botColors[botName]);
+            appendMessage(`توكن: ${token}`, 'bot-message', botColors[botName]);
+            displayBot(botName, token);
+            document.getElementById('imageUploadContainer').style.display = 'none';
+        };
+        reader.readAsDataURL(imageInput.files[0]);
+    }
+    
+    function deleteBot(botName) {
+    if (botNames[botName]) {
+        delete botNames[botName];
+        delete botImages[botName];
+        delete botTokens[botName];
+        delete messagesHistory[botName];
+        delete commandsHistory[botName];
+        const bots = JSON.parse(localStorage.getItem('bots')) || {};
+        delete bots[botName];  // احذف البوت من التخزين
+        localStorage.setItem('bots', JSON.stringify(bots));  // احفظ التغييرات
+        const botList = document.getElementById('botList');
+        const botItem = Array.from(botList.children).find(item => item.innerText.includes(botName));
+        if (botItem) {
+            botList.removeChild(botItem);
+        }
+
+        appendMessage(`تم حذف البوت: ${botName}`, 'bot-message', '#e74c3c');
+        saveData();
+    } else {
+        appendMessage(`البوت غير موجود: ${botName}`, 'bot-message', '#e74c3c');
+    }
+}
+
+
+
+    function displayBot(botName, token) {
+        const botList = document.getElementById('botList');
+        const botItem = document.createElement('div');
+        botItem.className = 'bot-item';
+        botItem.innerHTML = `${botName} <img src="${botImages[botName]}" />`;
+        botItem.onclick = () => selectBot(botName); // اختيار البوت عند الضغط
+        botList.appendChild(botItem);
+        
+        // إضافة ألوان للبوتات المصنوعة
+        botColors[botName] = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        appendMessage(`تم إضافة البوت: ${botName} إلى القائمة!`, 'bot-message', botColors[botName]);
+    }
+
+    function appendMessage(text, className, color) {
+        const messagesContainer = document.getElementById('messages');
+        let messageHtml = `<div class="${className}" style="color: ${color};">${text}</div>`;
+    
+    // إضافة إطار إذا كانت الرسالة أمر
+    if (className === 'command-message') {
+        messageHtml = `<div class="command-frame">${messageHtml}</div>`;
+    }
+   
+        messagesContainer.innerHTML += messageHtml;
+        if (activeBot) {
+            messagesHistory[activeBot].push(text); // تخزين الرسالة في تاريخ المحادثة الخاصة بالبوت النشط
+        }
+        saveData();
+        messagesContainer.scrollTop = messagesContainer.scrollHeight; // التمرير لأسفل
+    }
+
+    function loadCommands() {
+        const commandsContainer = document.getElementById('commands');
+        commandsContainer.innerHTML = '';
+        if (activeBot && commandsHistory[activeBot]) {
+            commandsHistory[activeBot].forEach(cmd => {
+            	const commandHtml = `<div class="command-message">${cmd}</div>`;
+                commandsContainer.innerHTML += `<div class="command-message">${cmd}</div>`;
+                
+            });
+        }
+    }
+
+    function goHome() {
+        activeBot = null;
+        const messagesContainer = document.getElementById('messages');
+        messagesContainer.innerHTML = '';
+        appendMessage(`مرحبًا بك في الصفحة الرئيسية! اختر بوتًا من القائمة.`, 'bot-message', botColors['الصفحة الرئيسية']);
+    }
+
+    function saveData() {
+        localStorage.setItem('messagesHistory', JSON.stringify(messagesHistory));
+        localStorage.setItem('commandsHistory', JSON.stringify(commandsHistory));
+    }
+
+    // تحميل البيانات من التخزين المحلي عند التحميل
+    window.onload = function() {
+        const savedMessages = localStorage.getItem('messagesHistory');
+        const savedCommands = localStorage.getItem('commandsHistory');
+        const savedBots = localStorage.getItem('bots');
+
+        if (savedMessages) {
+            Object.assign(messagesHistory, JSON.parse(savedMessages));
+        }
+        if (savedCommands) {
+            Object.assign(commandsHistory, JSON.parse(savedCommands));
+        }
+        if (savedBots) {
+        const bots = JSON.parse(savedBots);
+        for (const botName in bots) {
+            const bot = bots[botName];
+            botNames[botName] = botName;
+            botImages[botName] = bot.image;
+            botTokens[botName] = bot.token;
+            displayBot(botName, bot.token);  // عرض البوت في القائمة
+        }
+    }
+    
+    startAutomaticMessaging();
+    }; 
+</script>
+
+</body>
+</html>
