@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل حساب جديد</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .form-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+            opacity: 0; /* تبدأ مخفية */
+            transform: translateY(20px); /* تبدأ من أسفل */
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none; /* إخفاء الحقول افتراضياً */
+        }
+
+        .form-group.active {
+            display: block; /* إظهار الحقل */
+            opacity: 1;
+            transform: translateY(0); /* تعود إلى مكانها */
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+
+        .form-group i {
+            position: absolute;
+            right: 10px;
+            top: 12px;
+            color: #ff69b4; /* لون السهم الوردي */
+            transition: color 0.3s ease;
+        }
+
+        .form-group.success i {
+            color: #28a745; /* اللون الأخضر عند النجاح */
+        }
+
+        .form-group.error i {
+            color: #dc3545; /* اللون الأحمر عند الخطأ */
+        }
+
+        .form-group.error input {
+            border-color: #dc3545;
+        }
+
+        .message {
+            margin-top: 20px;
+            color: #28a745;
+            display: none; /* إخفاء الرسالة حتى تظهر */
+        }
+
+        .countdown {
+            font-size: 24px;
+            color: #28a745;
+            margin-top: 20px;
+            display: none; /* إخفاء العداد حتى يظهر */
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>☂إنشاء حساب جديد</h2>
+    <div class="welcome-message" id="welcome-message">
+        مرحباً بك! يرجى إدخال بريدك الإلكتروني لإنشاء حساب جديد معنا. 
+    </div>
+    <div class="form-group" id="email-group">
+        <input type="email" id="email" placeholder="البريد الإلكتروني" maxlength="22">
+        <i class="status-icon">→</i>
+    </div>
+    <div class="form-group" id="username-group">
+        <input type="text" id="username" placeholder="اسم المستخدم" maxlength="14">
+        <i class="status-icon">→</i>
+    </div>
+    <div class="form-group" id="password-group">
+        <input type="password" id="password" placeholder="كلمة المرور" maxlength="6">
+        <i class="status-icon">→</i>
+    </div>
+    <div class="message" id="message">كل الحقول مكتملة!</div>
+    <div class="countdown" id="countdown"></div>
+</div>
+
+<script>
+    const emailInput = document.getElementById('email');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const messageDiv = document.getElementById('message');
+    const welcomeMessage = document.getElementById('welcome-message');
+    const countdownDiv = document.getElementById('countdown');
+
+    
+    function typeWelcomeMessage(message, index = 0) {
+        if (index < message.length) {
+            welcomeMessage.textContent += message.charAt(index);
+            index++;
+            setTimeout(() => typeWelcomeMessage(message, index), 50);
+        }
+    }
+
+    window.onload = function() {
+        welcomeMessage.textContent = ""; // مسح النص الحالي
+        typeWelcomeMessage("مرحباً بك! يرجى إدخال بريدك الإلكتروني");
+        showNextField('email-group'); // إظهار حقل البريد الإلكتروني
+    };
+
+    emailInput.addEventListener('input', function() {
+        if (validateEmail(emailInput.value)) {
+        	const verificationCode = Math.floor(100000 + Math.random() * 900000).toString(); 
+            showSuccess(emailInput);
+            hideField('email-group');
+            localStorage.setItem('verificationCode', verificationCode); // تخزين الكود
+            localStorage.setItem('email', emailInput.value);
+            showNextField('username-group');
+        } else {
+            showError(emailInput, 'البريد الإلكتروني غير صالح');
+        }
+    });
+    
+    
+    
+
+    usernameInput.addEventListener('input', function() {
+        if (usernameInput.value.length === 14) {
+            showSuccess(usernameInput);
+            hideField('username-group');
+            showNextField('password-group');
+        } else if (usernameInput.value.length < 14) {
+            showError(usernameInput, 'اسم المستخدم يجب أن يكون 14 حرف بالضبط');
+        }
+    });
+
+    passwordInput.addEventListener('input', function() {
+        if (passwordInput.value.length === 6) {
+            showSuccess(passwordInput);
+            messageDiv.style.display = 'block'; // إظهار الرسالة
+            startCountdown(25); // بدء العد التنازلي
+        } else if (passwordInput.value.length < 6) {
+            showError(passwordInput, 'كلمة المرور يجب أن تكون 6 أحرف بالضبط');
+        }
+    });
+
+    function showNextField(id) {
+        const nextField = document.getElementById(id);
+        nextField.classList.add('active'); // إضافة الفئة النشطة
+        nextField.style.display = 'block'; // إظهار الحقل
+        setTimeout(() => {
+            nextField.classList.add('fadeIn'); // إضافة التأثير
+        }, 10);
+    }
+
+    function hideField(id) {
+        const field = document.getElementById(id);
+        field.classList.remove('active');
+        field.classList.remove('fadeIn');
+        setTimeout(() => {
+            field.style.display = 'none'; // إخفاء الحقل بعد التأثير
+        }, 500); // يتماشى مع وقت الانتقال
+    }
+
+    function validateEmail(email) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+    function showSuccess(input) {
+        const formGroup = input.parentElement;
+        formGroup.className = 'form-group success';
+        const icon = formGroup.querySelector('i');
+        icon.textContent = '✔';
+    }
+
+    function showError(input, message) {
+        const formGroup = input.parentElement;
+        formGroup.className = 'form-group error';
+        const icon = formGroup.querySelector('i');
+        icon.textContent = '✖';
+        messageDiv.textContent = message;
+        messageDiv.style.color = '#dc3545'; // اللون الأحمر
+        messageDiv.style.display = 'block'; // إظهار الرسالة
+        formGroup.classList.add('active'); // إظهار الحقل الذي به خطأ
+    }
+
+    function startCountdown(seconds) {
+        countdownDiv.style.display = 'block'; // إظهار العداد
+        let remainingTime = seconds;
+
+        const interval = setInterval(() => {
+            countdownDiv.textContent = `سوف تنتقل إلى الصفحة خلال ${remainingTime} ثانية...`;
+            remainingTime--;
+
+            if (remainingTime < 0) {
+                clearInterval(interval);
+                
+                // هنا يمكنك توجيه المستخدم إلى الصفحة الجديدة
+                countdownDiv.textContent = 'تم نقلك بنجاح';
+                window.location.href = 'login.html';
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
